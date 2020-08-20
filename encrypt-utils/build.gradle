@@ -10,23 +10,15 @@ buildscript {
 publish {
     userOrg = 'marking'
     groupId = 'com.mys.www'
-    artifactId = 'wx-utils'
+    artifactId = 'encrypt-utils'
     publishVersion = '0.0.1'
-    desc = 'wx utils.'
-    website = 'https://github.com/makai554892700/web-utils/tree/master/wx-utils'
+    desc = 'encrypt utils.'
+    website = 'https://github.com/makai554892700/web-utils/tree/master/encrypt-utils'
 }
 
 version '1.0-SNAPSHOT'
-archivesBaseName = 'wx-utils'
+archivesBaseName = 'encrypt-utils'
 jar.enabled = true
 bootJar.enabled = false
-dependencies {
-    //fastjson 依赖
-    api("com.alibaba:fastjson:1.2.73")
-    //xml解析 依赖
-    api("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.11.2")
-    api("org.jdom:jdom2:2.0.6")
-    api project(':encrypt-utils')
-    api project(':net-utils')
-}
+dependencies {}
 //上传jar包命令： gradlew clean build bintrayUpload -PbintrayUser=PBINTRAY_NAME -PbintrayKey=PBINTRAY_KEY -PdryRun=false
