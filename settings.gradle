@@ -2,4 +2,7 @@ rootProject.name = 'web-utils'
 include 'wx-utils'
 include 'encrypt-utils'
 include 'net-utils'
+include 'file-utils'
+include 'base-utils'
+include 'all-utils'
 

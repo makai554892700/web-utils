@@ -10,14 +10,14 @@ buildscript {
 publish {
     userOrg = 'marking'
     groupId = 'com.mys.www'
-    artifactId = 'net-utils'
+    artifactId = 'base-utils'
     publishVersion = '0.0.1'
-    desc = 'net utils.'
-    website = 'https://github.com/makai554892700/web-utils/tree/master/net-utils'
+    desc = 'base utils.'
+    website = 'https://github.com/makai554892700/web-utils/tree/master/base-utils'
 }
 
 version '1.0-SNAPSHOT'
-archivesBaseName = 'net-utils'
+archivesBaseName = 'base-utils'
 jar.enabled = true
 bootJar.enabled = false
 dependencies {}

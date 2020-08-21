@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WeChatUtils {
@@ -15,75 +16,62 @@ public class WeChatUtils {
     private static final String GET_FIRST_ORDER = "https://api.mch.weixin.qq.com/pay/unifiedorder";
     private static final String GET_ORDER = "https://api.mch.weixin.qq.com/pay/orderquery";
 
-    public static boolean checkWXOrder(String packageName, String orderNumber) {
-        WXPayResponse wxPayResponse = getWXPayResponseByOutTradeNo(packageName, orderNumber);
-//        System.out.println("wxPayResponse=" + wxPayResponse);
+    public static boolean checkWXOrder(String appId, String key, String mchId, String orderNumber) {
+        WXPayResponse wxPayResponse = getWXPayResponseByOutTradeNo(appId, key, mchId, orderNumber);
+//        log.log(Level.WARNING,"wxPayResponse=" + wxPayResponse);
         return wxPayResponse != null && "SUCCESS".equals(wxPayResponse.getReturnCode())
                 && "SUCCESS".equals(wxPayResponse.getResultCode())
                 && "SUCCESS".equals(wxPayResponse.getTradeState());
     }
 
-    public static String getTransactionIdByOutTradeNo(String packageName, String outTradeNo) {
-        WXPayResponse wxPayResponse = getWXPayResponseByOutTradeNo(packageName, outTradeNo);
+    public static String getTransactionIdByOutTradeNo(String appId, String key, String mchId, String outTradeNo) {
+        WXPayResponse wxPayResponse = getWXPayResponseByOutTradeNo(appId, key, mchId, outTradeNo);
         if (wxPayResponse != null) {
             return wxPayResponse.getTransactionId();
         }
         return null;
     }
 
-    private static WXPayResponse getWXPayResponseByOutTradeNo(String packageName
-            , String outTradeNo) {
-
-        AppInfo appinfo = appInfos.get(packageName);
-        if (appinfo == null) {
-            throw new BaseException(BaseResultEnum.NO_APP_INFO);
-        }
+    private static WXPayResponse getWXPayResponseByOutTradeNo(String appId, String key, String mchId, String outTradeNo) {
         SortedMap<String, String> temp = new TreeMap<String, String>() {
             {
-                put("appid", appinfo.getAppId());//应用ID
-                put("mch_id", CT_NUMBER);//商户号
+                put("appid", appId);//应用ID
+                put("mch_id", mchId);//商户号
                 put("nonce_str", MD5Utils.MD5(String.valueOf(System.currentTimeMillis())
                         , false));//随机字符串
                 put("out_trade_no", outTradeNo);//商户订单号
 //                put("transaction_id", orderNumber);//商户订单号
             }
         };
-        temp.put("sign", getSign(temp));
+        temp.put("sign", getSign(temp, key));
         String xml = getXml(temp);
-        byte[] result = HttpUtils.getInstance().postURLResponse(GET_ORDER
+        byte[] result = HttpUtils.postURLResponse(GET_ORDER
                 , null, xml.getBytes());
-        return result == null ? null : XMLUtils.getObject(new String(result)
-                , WXPayResponse.class);
+        return XMLUtils.getObject(new String(result), WXPayResponse.class);
     }
 
-    public static ResponseWX getWXResponse(String packageName, String goodsName
-            , String goodsDesc, String orderNumber, String price, String ip)
-            throws BaseException {
-        AppInfo appinfo = appInfos.get(packageName);
-        log.error("get appinfo=" + appinfo);
-        if (appinfo == null) {
-            throw new BaseException(BaseResultEnum.NO_APP_INFO);
-        }
+    public static ResponseWX getWXResponse(String appId, String key, String mchId, String callBackUrl
+            , String goodsName, String goodsDesc, String orderNumber, String price, String ip) {
         SortedMap<String, String> temp = new TreeMap<String, String>() {
             {
-                put("appid", appinfo.getAppId());//应用ID
-                put("mch_id", CT_NUMBER);//商户号
+                put("appid", appId);//应用ID
+                put("mch_id", mchId);//商户号
                 put("nonce_str", MD5Utils.MD5(String.valueOf(System.currentTimeMillis()), false));//随机字符串
                 put("body", goodsName);//商品描述
                 put("attach", goodsDesc);//附加数据
                 put("out_trade_no", orderNumber);//商户订单号
                 put("total_fee", price);//总金额
                 put("spbill_create_ip", ip);//终端IP
-                put("notify_url", appinfo.getCallBackUrl());//通知地址
+                put("notify_url", callBackUrl);//通知地址
                 put("trade_type", "APP");//交易类型
             }
         };
-        temp.put("sign", getSign(temp));
+        temp.put("sign", getSign(temp, key));
         String xml = getXml(temp);
-        byte[] result = HttpUtils.getInstance().postURLResponse(GET_FIRST_ORDER, null, xml.getBytes());
-        log.error("get result=" + (result == null ? "nulll" : new String(result)));
-        if (result == null) {
-            throw new BaseException(BaseResultEnum.WECHAT_SIGN_ERROR);
+        byte[] result = HttpUtils.postURLResponse(GET_FIRST_ORDER, null, xml.getBytes());
+        log.log(Level.WARNING, "get result=" + new String(result));
+        if (result.length == 0) {
+            return null;
         }
         WXResponse response = XMLUtils.getObject(new String(result), WXResponse.class);
         if (response != null && "SUCCESS".equals(response.getReturnCode())
@@ -105,12 +93,12 @@ public class WeChatUtils {
                     put("prepayid", responseWX.getPrepayid());//商户订单号
                     put("timestamp", responseWX.getTimestamp());//附加数据
                 }
-            }));
+            }, key));
             responseWX.setOrderNumber(orderNumber);
             return responseWX;
         }
-        log.error("getWXResponse=" + new String(result));
-        throw new BaseException(BaseResultEnum.WECHAT_SIGN_ERROR);
+        log.log(Level.WARNING, "getWXResponse=" + new String(result));
+        return null;
     }
 
     private static String getXml(SortedMap<String, String> data) {
@@ -122,57 +110,52 @@ public class WeChatUtils {
         return result.append("</xml>").toString();
     }
 
-    private static String getSign(SortedMap<String, String> data) {
+    private static String getSign(SortedMap<String, String> data, String key) {
         String result = null;
         if (data != null) {
-            StringBuilder key = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
             boolean isFirst = true;
             for (Map.Entry<String, String> kv : data.entrySet()) {
                 if (isFirst) {
                     isFirst = false;
                 } else {
-                    key.append("&");
+                    stringBuilder.append("&");
                 }
-                key.append(kv.getKey());
-                key.append("=");
-                key.append(kv.getValue());
+                stringBuilder.append(kv.getKey());
+                stringBuilder.append("=");
+                stringBuilder.append(kv.getValue());
             }
-            key.append("&key=").append(KEY);
-            return MD5Utils.MD5(key.toString(), false).toUpperCase();
+            stringBuilder.append("&key=").append(key);
+            return MD5Utils.MD5(stringBuilder.toString(), false).toUpperCase();
         }
         return result;
     }
 
-    public static WeChatUserResponse getUser(String packageName, String authCode) {
-        AppInfo appinfo = appInfos.get(packageName);
-        if (appinfo == null) {
-            throw new BaseException(BaseResultEnum.NO_APP_INFO);
-        }
+    public static WeChatUserResponse getUser(String appId, String secret, String authCode) {
         WeChatUserResponse result = null;
-        String host = String.format(GET_ACCESS_TOKEN_FORMAT, appinfo.getAppId()
-                , appinfo.getSecret(), authCode);
-        byte[] response = HttpUtils.getInstance().getURLResponse(host, null);
-        if (response != null) {
+        String host = String.format(GET_ACCESS_TOKEN_FORMAT, appId, secret, authCode);
+        byte[] response = HttpUtils.getURLResponse(host, null);
+        if (response.length > 0) {
             AccessTokenResponse accessTokenResponse;
             try {
                 accessTokenResponse = JSON.parseObject(new String(response), AccessTokenResponse.class);
             } catch (Exception e) {
-                System.out.println("Format response error.e=" + e + ";response=" + new String(response));
-                return result;
+                log.log(Level.WARNING, "Format response error.e=" + e + ";response=" + new String(response));
+                return null;
             }
             if (accessTokenResponse != null && accessTokenResponse.accessToken != null) {
-                response = HttpUtils.getInstance().getURLResponse(host, null);
-                if (response != null) {
+                response = HttpUtils.getURLResponse(host, null);
+                if (response.length > 0) {
                     host = String.format(GET_USER_INFO, accessTokenResponse.accessToken, accessTokenResponse.openid);
-                    response = HttpUtils.getInstance().getURLResponse(host, null);
+                    response = HttpUtils.getURLResponse(host, null);
                     try {
                         result = JSON.parseObject(new String(response), WeChatUserResponse.class);
                         if (result.unionid == null) {
-                            System.out.println("Get user info error." + ";response=" + new String(response));
+                            log.log(Level.WARNING, "Get user info error." + ";response=" + new String(response));
                             result = null;
                         }
                     } catch (Exception e) {
-                        System.out.println("Format response error.e=" + e + ";response=" + new String(response));
+                        log.log(Level.WARNING, "Format response error.e=" + e + ";response=" + new String(response));
                     }
                 }
             }
@@ -334,55 +317,6 @@ public class WeChatUtils {
         public void setUnionid(String unionid) {
             this.unionid = unionid;
         }
-    }
-
-    public static class AppInfo {
-        private String appId;
-        private String secret;
-        private String callBackUrl;
-
-        public AppInfo() {
-        }
-
-        public AppInfo(String appId, String secret, String callBackUrl) {
-            this.appId = appId;
-            this.secret = secret;
-            this.callBackUrl = callBackUrl;
-        }
-
-        public String getAppId() {
-            return appId;
-        }
-
-        public void setAppId(String appId) {
-            this.appId = appId;
-        }
-
-        public String getSecret() {
-            return secret;
-        }
-
-        public void setSecret(String secret) {
-            this.secret = secret;
-        }
-
-        public String getCallBackUrl() {
-            return callBackUrl;
-        }
-
-        public void setCallBackUrl(String callBackUrl) {
-            this.callBackUrl = callBackUrl;
-        }
-
-        @Override
-        public String toString() {
-            return "AppInfo{" +
-                    "appId='" + appId + '\'' +
-                    ", secret='" + secret + '\'' +
-                    ", callBackUrl='" + callBackUrl + '\'' +
-                    '}';
-        }
-
     }
 
 }
