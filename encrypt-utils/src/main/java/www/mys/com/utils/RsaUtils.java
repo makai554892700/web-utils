@@ -42,11 +42,9 @@ public class RsaUtils {
         SecureRandom secureRandom = new SecureRandom(secret.getBytes());
         keyPairGenerator.initialize(Math.max(keySize, DEFAULT_KEY_SIZE), secureRandom);
         KeyPair keyPair = keyPairGenerator.genKeyPair();
-        // 获取公钥并写出
         byte[] publicKeyBytes = keyPair.getPublic().getEncoded();
         publicKeyBytes = Base64.getEncoder().encode(publicKeyBytes);
         writeFile(publicKeyFilename, publicKeyBytes);
-        // 获取私钥并写出
         byte[] privateKeyBytes = keyPair.getPrivate().getEncoded();
         privateKeyBytes = Base64.getEncoder().encode(privateKeyBytes);
         writeFile(privateKeyFilename, privateKeyBytes);

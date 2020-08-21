@@ -1,20 +1,20 @@
-apply plugin: 'com.novoda.bintray-release'
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.novoda:bintray-release:0.9.2'
-    }
-}
-publish {
-    userOrg = 'marking'
-    groupId = 'com.mys.www'
-    artifactId = 'wx-utils'
-    publishVersion = '0.0.1'
-    desc = 'wx utils.'
-    website = 'https://github.com/makai554892700/web-utils/tree/master/wx-utils'
-}
+//apply plugin: 'com.novoda.bintray-release'
+//buildscript {
+//    repositories {
+//        jcenter()
+//    }
+//    dependencies {
+//        classpath 'com.novoda:bintray-release:0.9.2'
+//    }
+//}
+//publish {
+//    userOrg = 'marking'
+//    groupId = 'com.mys.www'
+//    artifactId = 'wx-utils'
+//    publishVersion = '0.0.1'
+//    desc = 'wx utils.'
+//    website = 'https://github.com/makai554892700/web-utils/tree/master/wx-utils'
+//}
 
 version '1.0-SNAPSHOT'
 archivesBaseName = 'wx-utils'
@@ -26,6 +26,8 @@ dependencies {
     //xml解析 依赖
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.11.2")
     api("org.jdom:jdom2:2.0.6")
+//    api("www.mys.com:encrypt-utils:0.0.1")
+//    api("www.mys.com:net-utils:0.0.1")
     api project(':encrypt-utils')
     api project(':net-utils')
 }

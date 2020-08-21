@@ -159,7 +159,7 @@ public class HttpUtils {
                         }
                         break;
                 }
-                is = conn.getInputStream();   //获取输入流，此时才真正建立链接
+                is = conn.getInputStream();
                 baos = new ByteArrayOutputStream();
                 byte[] temp = new byte[1024];
                 int len;

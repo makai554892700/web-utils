@@ -7,29 +7,29 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 public class WXResponse {
 
     @JacksonXmlProperty(localName = "return_code")
-    private String returnCode;//返回码
+    private String returnCode;
     @JacksonXmlProperty(localName = "return_msg")
-    private String returnMsg;//返回信息
+    private String returnMsg;
     @JacksonXmlProperty(localName = "appid")
-    private String appid;//appid
+    private String appid;
     @JacksonXmlProperty(localName = "mch_id")
-    private String mchId;//商户号
+    private String mchId;
     @JacksonXmlProperty(localName = "nonce_str")
-    private String nonceStr;//随机字符串
+    private String nonceStr;
     @JacksonXmlProperty(localName = "sign")
-    private String sign;//签名
+    private String sign;
     @JacksonXmlProperty(localName = "result_code")
-    private String resultCode;//结果码
+    private String resultCode;
     @JacksonXmlProperty(localName = "err_code")
-    private String errCode;//错误码
+    private String errCode;
     @JacksonXmlProperty(localName = "err_code_des")
-    private String errCodeDes;//错误描述
+    private String errCodeDes;
     @JacksonXmlProperty(localName = "prepay_id")
-    private String prepayId;//支付id
+    private String prepayId;
     @JacksonXmlProperty(localName = "trade_type")
-    private String tradeType;//支付类型
+    private String tradeType;
     @JacksonXmlProperty(localName = "device_info")
-    private String deviceInfo;//设备信息
+    private String deviceInfo;
 
     public String getReturnCode() {
         return returnCode;

@@ -42,7 +42,6 @@ public class AppendFileUtils {
         }
     }
 
-    //直接叠加数据
     public void appendString(String data) {
         if (isInited) {
             printWriter.print(data);
@@ -50,7 +49,6 @@ public class AppendFileUtils {
         }
     }
 
-    //叠加一行数据
     public void appendLineString(String data) {
         if (isInited) {
             printWriter.println(data);
@@ -58,12 +56,10 @@ public class AppendFileUtils {
         }
     }
 
-    //是否正确初始化
     public boolean isInited() {
         return isInited;
     }
 
-    //每次用完一定要关闭
     public void endAppendFile() {
         if (isInited) {
             try {

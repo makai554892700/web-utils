@@ -35,12 +35,11 @@ public class WeChatUtils {
     private static WXPayResponse getWXPayResponseByOutTradeNo(String appId, String key, String mchId, String outTradeNo) {
         SortedMap<String, String> temp = new TreeMap<String, String>() {
             {
-                put("appid", appId);//应用ID
-                put("mch_id", mchId);//商户号
-                put("nonce_str", MD5Utils.MD5(String.valueOf(System.currentTimeMillis())
-                        , false));//随机字符串
-                put("out_trade_no", outTradeNo);//商户订单号
-//                put("transaction_id", orderNumber);//商户订单号
+                put("appid", appId);
+                put("mch_id", mchId);
+                put("nonce_str", MD5Utils.MD5(String.valueOf(System.currentTimeMillis()), false));
+                put("out_trade_no", outTradeNo);
+//                put("transaction_id", orderNumber);
             }
         };
         temp.put("sign", getSign(temp, key));
@@ -54,16 +53,16 @@ public class WeChatUtils {
             , String goodsName, String goodsDesc, String orderNumber, String price, String ip) {
         SortedMap<String, String> temp = new TreeMap<String, String>() {
             {
-                put("appid", appId);//应用ID
-                put("mch_id", mchId);//商户号
-                put("nonce_str", MD5Utils.MD5(String.valueOf(System.currentTimeMillis()), false));//随机字符串
-                put("body", goodsName);//商品描述
-                put("attach", goodsDesc);//附加数据
-                put("out_trade_no", orderNumber);//商户订单号
-                put("total_fee", price);//总金额
-                put("spbill_create_ip", ip);//终端IP
-                put("notify_url", callBackUrl);//通知地址
-                put("trade_type", "APP");//交易类型
+                put("appid", appId);
+                put("mch_id", mchId);
+                put("nonce_str", MD5Utils.MD5(String.valueOf(System.currentTimeMillis()), false));
+                put("body", goodsName);
+                put("attach", goodsDesc);
+                put("out_trade_no", orderNumber);
+                put("total_fee", price);
+                put("spbill_create_ip", ip);
+                put("notify_url", callBackUrl);
+                put("trade_type", "APP");
             }
         };
         temp.put("sign", getSign(temp, key));
@@ -86,12 +85,12 @@ public class WeChatUtils {
             responseWX.setPrepayid(response.getPrepayId());
             responseWX.setSign(getSign(new TreeMap<String, String>() {
                 {
-                    put("appid", responseWX.getAppid());//应用ID
-                    put("partnerid", responseWX.getPartnerid());//商户号
-                    put("noncestr", responseWX.getNoncestr());//商品描述
-                    put("package", responseWX.getPackageName());//随机字符串
-                    put("prepayid", responseWX.getPrepayid());//商户订单号
-                    put("timestamp", responseWX.getTimestamp());//附加数据
+                    put("appid", responseWX.getAppid());
+                    put("partnerid", responseWX.getPartnerid());
+                    put("noncestr", responseWX.getNoncestr());
+                    put("package", responseWX.getPackageName());
+                    put("prepayid", responseWX.getPrepayid());
+                    put("timestamp", responseWX.getTimestamp());
                 }
             }, key));
             responseWX.setOrderNumber(orderNumber);

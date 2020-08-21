@@ -1,0 +1,32 @@
+//apply plugin: 'com.novoda.bintray-release'
+//buildscript {
+//    repositories {
+//        jcenter()
+//    }
+//    dependencies {
+//        classpath 'com.novoda:bintray-release:0.9.2'
+//    }
+//}
+//publish {
+//    userOrg = 'marking'
+//    groupId = 'com.mys.www'
+//    artifactId = 'spring-utils'
+//    publishVersion = '0.0.1'
+//    desc = 'spring utils.'
+//    website = 'https://github.com/makai554892700/web-utils/tree/master/spring-utils'
+//}
+
+version '1.0-SNAPSHOT'
+archivesBaseName = 'spring-utils'
+jar.enabled = true
+bootJar.enabled = false
+dependencies {
+    compileOnly("org.springframework.boot:spring-boot-starter-web")
+    compileOnly("org.springframework.boot:spring-boot-starter-data-jpa")
+    compileOnly("javax.validation:validation-api:2.0.1.Final")
+    //swagger2 依赖
+    compileOnly("io.springfox:springfox-swagger2:2.10.5")
+    compileOnly("io.springfox:springfox-spring-webmvc:2.10.5")
+    compileOnly("io.springfox:springfox-swagger-ui:2.10.5")
+}
+//上传jar包命令： gradlew clean build bintrayUpload -PbintrayUser=PBINTRAY_NAME -PbintrayKey=PBINTRAY_KEY -PdryRun=false

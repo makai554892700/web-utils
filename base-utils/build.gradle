@@ -1,20 +1,20 @@
-apply plugin: 'com.novoda.bintray-release'
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.novoda:bintray-release:0.9.2'
-    }
-}
-publish {
-    userOrg = 'marking'
-    groupId = 'com.mys.www'
-    artifactId = 'base-utils'
-    publishVersion = '0.0.1'
-    desc = 'base utils.'
-    website = 'https://github.com/makai554892700/web-utils/tree/master/base-utils'
-}
+//apply plugin: 'com.novoda.bintray-release'
+//buildscript {
+//    repositories {
+//        jcenter()
+//    }
+//    dependencies {
+//        classpath 'com.novoda:bintray-release:0.9.2'
+//    }
+//}
+//publish {
+//    userOrg = 'marking'
+//    groupId = 'com.mys.www'
+//    artifactId = 'base-utils'
+//    publishVersion = '0.0.2'
+//    desc = 'base utils.'
+//    website = 'https://github.com/makai554892700/web-utils/tree/master/base-utils'
+//}
 
 version '1.0-SNAPSHOT'
 archivesBaseName = 'base-utils'
