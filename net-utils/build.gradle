@@ -16,7 +16,7 @@
 //    website = 'https://github.com/makai554892700/web-utils/tree/master/net-utils'
 //}
 
-version '1.0-SNAPSHOT'
+version '0.0.1'
 archivesBaseName = 'net-utils'
 jar.enabled = true
 bootJar.enabled = false

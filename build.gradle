@@ -3,7 +3,8 @@ version '1.0-SNAPSHOT'
 
 buildscript {
     repositories {
-        jcenter()
+        maven { url "https://dl.bintray.com/marking/maven" }
+//        jcenter()
         mavenCentral()
         maven { url 'https://repo.spring.io/snapshot' }
         maven { url 'https://repo.spring.io/milestone' }
@@ -25,7 +26,8 @@ subprojects {
     apply plugin: 'io.spring.dependency-management'
     sourceCompatibility = 1.8
     repositories {
-        jcenter()
+        maven { url "https://dl.bintray.com/marking/maven" }
+//        jcenter()
         mavenCentral()
         maven { url 'https://repo.spring.io/snapshot' }
         maven { url 'https://repo.spring.io/milestone' }
