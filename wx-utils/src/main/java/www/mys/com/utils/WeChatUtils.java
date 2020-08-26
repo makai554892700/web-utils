@@ -132,34 +132,35 @@ public class WeChatUtils {
 
     public static WeChatUserResponse getUser(String appId, String secret, String authCode) {
         WeChatUserResponse result = null;
-        String host = String.format(GET_ACCESS_TOKEN_FORMAT, appId, secret, authCode);
-        byte[] response = HttpUtils.getURLResponse(host, null);
-        if (response.length > 0) {
-            AccessTokenResponse accessTokenResponse;
-            try {
-                accessTokenResponse = JSON.parseObject(new String(response), AccessTokenResponse.class);
-            } catch (Exception e) {
-                log.log(Level.WARNING, "Format response error.e=" + e + ";response=" + new String(response));
-                return null;
-            }
-            if (accessTokenResponse != null && accessTokenResponse.accessToken != null) {
-                response = HttpUtils.getURLResponse(host, null);
-                if (response.length > 0) {
-                    host = String.format(GET_USER_INFO, accessTokenResponse.accessToken, accessTokenResponse.openid);
-                    response = HttpUtils.getURLResponse(host, null);
-                    try {
-                        result = JSON.parseObject(new String(response), WeChatUserResponse.class);
-                        if (result.unionid == null) {
-                            log.log(Level.WARNING, "Get user info error." + ";response=" + new String(response));
-                            result = null;
-                        }
-                    } catch (Exception e) {
-                        log.log(Level.WARNING, "Format response error.e=" + e + ";response=" + new String(response));
+        AccessTokenResponse accessTokenResponse = getAccessToken(appId, secret, authCode);
+        if (accessTokenResponse != null && accessTokenResponse.accessToken != null) {
+            String host = String.format(GET_USER_INFO, accessTokenResponse.accessToken, accessTokenResponse.openid);
+            String response = HttpUtils.getURLStrResponse(host, null);
+            if (!response.isEmpty()) {
+                try {
+                    result = JSON.parseObject(response, WeChatUserResponse.class);
+                    if (result.unionid == null) {
+                        log.log(Level.WARNING, "Get user info error." + ";response=" + response);
                     }
+                } catch (Exception e) {
+                    log.log(Level.WARNING, "Format response error.e=" + e + ";response=" + response);
                 }
             }
         }
         return result;
+    }
+
+    public static AccessTokenResponse getAccessToken(String appId, String secret, String authCode) {
+        String host = String.format(GET_ACCESS_TOKEN_FORMAT, appId, secret, authCode);
+        String response = HttpUtils.getURLStrResponse(host, null);
+        if (!response.isEmpty()) {
+            try {
+                return JSON.parseObject(response, AccessTokenResponse.class);
+            } catch (Exception e) {
+                log.log(Level.WARNING, "getAccessToken error.e=" + e + ";response=" + response);
+            }
+        }
+        return null;
     }
 
     public static class WeChatUserResponse {
@@ -261,7 +262,7 @@ public class WeChatUtils {
         }
     }
 
-    private static class AccessTokenResponse {
+    public static class AccessTokenResponse {
         private String accessToken;
         private int expiresIn;
         private String refreshToken;
