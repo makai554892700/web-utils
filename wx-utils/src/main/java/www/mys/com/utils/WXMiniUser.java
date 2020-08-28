@@ -8,6 +8,7 @@ public class WXMiniUser {
     private String language;
     private String city;
     private String province;
+    private String country;
     private String avatarUrl;
     private String unionId;
     private WaterMark watermark;
@@ -60,6 +61,14 @@ public class WXMiniUser {
         this.province = province;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     public String getAvatarUrl() {
         return avatarUrl;
     }
@@ -93,6 +102,7 @@ public class WXMiniUser {
                 ", language='" + language + '\'' +
                 ", city='" + city + '\'' +
                 ", province='" + province + '\'' +
+                ", country='" + country + '\'' +
                 ", avatarUrl='" + avatarUrl + '\'' +
                 ", unionId='" + unionId + '\'' +
                 ", watermark=" + watermark +

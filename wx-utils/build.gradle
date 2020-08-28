@@ -11,12 +11,12 @@
 //    userOrg = 'marking'
 //    groupId = 'com.mys.www'
 //    artifactId = 'wx-utils'
-//    publishVersion = '0.0.5'
+//    publishVersion = '0.0.6'
 //    desc = 'wx utils.'
 //    website = 'https://github.com/makai554892700/web-utils/tree/master/wx-utils'
 //}
 
-version '0.0.5'
+version '0.0.6'
 archivesBaseName = 'wx-utils'
 jar.enabled = true
 bootJar.enabled = false
