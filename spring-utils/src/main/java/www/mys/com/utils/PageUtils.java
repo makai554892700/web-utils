@@ -26,7 +26,7 @@ public class PageUtils {
 
             @Override
             public <U> Page<U> map(Function<? super Res, ? extends U> converter) {
-                Page<Res> result = page.map(real -> dataTransfer.real2Res(real));
+                Page<Res> result = page.map(dataTransfer::real2Res);
                 return result.map(converter);
             }
 

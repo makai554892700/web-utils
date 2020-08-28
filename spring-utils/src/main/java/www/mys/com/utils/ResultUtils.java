@@ -22,4 +22,12 @@ public class ResultUtils {
         return new Result<T>(code, message, data);
     }
 
+    public static <T> T getResult(Result<T> response) {
+        if (response.getCode() != ResultUtils.SUCCESS_CODE) {
+            throw new BaseException(response.getMessage(), response.getCode());
+        } else {
+            return response.getData();
+        }
+    }
+
 }
