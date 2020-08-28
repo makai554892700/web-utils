@@ -22,11 +22,11 @@ jar.enabled = true
 bootJar.enabled = false
 dependencies {
     //fastjson 依赖
-    api("com.alibaba:fastjson:1.2.73")
+    compileOnly("com.alibaba:fastjson:1.2.73")
     //xml解析 依赖
-    api("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.11.2")
-    api("org.bouncycastle:bcprov-jdk16:1.46")
-    api("org.jdom:jdom2:2.0.6")
+    compileOnly("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.11.2")
+    compileOnly("org.bouncycastle:bcprov-jdk16:1.46")
+    compileOnly("org.jdom:jdom2:2.0.6")
     api("com.mys.www:encrypt-utils:0.0.1")
     api("com.mys.www:net-utils:0.0.1")
 //    api project(':encrypt-utils')
