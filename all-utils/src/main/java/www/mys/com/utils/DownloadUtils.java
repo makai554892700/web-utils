@@ -30,10 +30,10 @@ public class DownloadUtils {
     public static UrlResponse url2InputStream(String urlString, HashMap<String, String> heads, int timeOut) {
         UrlResponse result = null;
         if (!StringUtils.isEmpty(urlString)) {
-            HttpURLConnection conn = null; //连接对象
+            HttpURLConnection conn = null;
             InputStream inputStream;
             try {
-                URL url = new URL(urlString); //URL对象
+                URL url = new URL(urlString);
                 if (urlString.startsWith(HTTPS)) {
                     HttpUtils.ignoreSsl();
                     conn = (HttpsURLConnection) url.openConnection();
