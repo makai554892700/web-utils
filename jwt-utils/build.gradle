@@ -11,19 +11,27 @@
 //    userOrg = 'marking'
 //    groupId = 'com.mys.www'
 //    artifactId = 'jwt-utils'
-//    publishVersion = '0.0.2'
+//    publishVersion = '0.0.3'
 //    desc = 'jwt utils.'
 //    website = 'https://github.com/makai554892700/web-utils/tree/master/jwt-utils'
 //}
 
-version '0.0.2'
+version '0.0.3'
 archivesBaseName = 'jwt-utils'
 jar.enabled = true
 bootJar.enabled = false
 dependencies {
     // jwt依赖
     compileOnly("io.jsonwebtoken:jjwt:0.9.1")
-    api("com.mys.www:spring-utils:0.0.2")
+    // springBoot 依赖
+    compileOnly("org.springframework.boot:spring-boot-starter-web")
+    compileOnly("org.springframework.boot:spring-boot-starter-data-jpa")
+    compileOnly("javax.validation:validation-api:2.0.1.Final")
+    // swagger2 依赖
+    compileOnly("io.springfox:springfox-swagger2:2.10.5")
+    compileOnly("io.springfox:springfox-spring-webmvc:2.10.5")
+    compileOnly("io.springfox:springfox-swagger-ui:2.10.5")
+    api("com.mys.www:spring-utils:0.0.3")
     api("com.mys.www:encrypt-utils:0.0.1")
 }
 //上传jar包命令： gradlew clean build bintrayUpload -PbintrayUser=PBINTRAY_NAME -PbintrayKey=PBINTRAY_KEY -PdryRun=false

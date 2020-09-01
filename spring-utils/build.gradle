@@ -11,12 +11,12 @@
 //    userOrg = 'marking'
 //    groupId = 'com.mys.www'
 //    artifactId = 'spring-utils'
-//    publishVersion = '0.0.2'
+//    publishVersion = '0.0.3'
 //    desc = 'spring utils.'
 //    website = 'https://github.com/makai554892700/web-utils/tree/master/spring-utils'
 //}
 
-version '0.0.2'
+version '0.0.3'
 archivesBaseName = 'spring-utils'
 jar.enabled = true
 bootJar.enabled = false
