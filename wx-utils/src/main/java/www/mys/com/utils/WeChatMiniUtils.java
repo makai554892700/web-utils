@@ -21,7 +21,7 @@ public class WeChatMiniUtils {
 
     public static ResponseWXMini getSessionKey(String appId, String secret, String authCode) {
         String host = String.format(GET_SESSION_KEY_FORMAT, appId, secret, authCode);
-        String response = HttpUtils.getURLStrResponse(host, null);
+        byte[] response = HttpUtils.getURLResponse(host, null);
         try {
             return JSON.parseObject(response, ResponseWXMini.class);
         } catch (Exception e) {
@@ -61,7 +61,7 @@ public class WeChatMiniUtils {
 
     public static AccessTokenResponse getAccessToken(String appid, String secret) {
         String url = String.format(GET_ACCESS_TOKEN_FORMAT, appid, secret);
-        String response = HttpUtils.getURLStrResponse(url, null);
+        byte[] response = HttpUtils.getURLResponse(url, null);
         return JSON.parseObject(response, AccessTokenResponse.class);
     }
 

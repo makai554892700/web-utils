@@ -11,12 +11,12 @@
 //    userOrg = 'marking'
 //    groupId = 'com.mys.www'
 //    artifactId = 'wx-utils'
-//    publishVersion = '0.0.6'
+//    publishVersion = '0.0.7'
 //    desc = 'wx utils.'
 //    website = 'https://github.com/makai554892700/web-utils/tree/master/wx-utils'
 //}
 
-version '0.0.6'
+version '0.0.7'
 archivesBaseName = 'wx-utils'
 jar.enabled = true
 bootJar.enabled = false
@@ -28,8 +28,6 @@ dependencies {
     compileOnly("org.bouncycastle:bcprov-jdk16:1.46")
     compileOnly("org.jdom:jdom2:2.0.6")
     api("com.mys.www:encrypt-utils:0.0.1")
-    api("com.mys.www:net-utils:0.0.1")
-//    api project(':encrypt-utils')
-//    api project(':net-utils')
+    api("com.mys.www:net-utils:0.0.2")
 }
 //上传jar包命令： gradlew clean build bintrayUpload -PbintrayUser=PBINTRAY_NAME -PbintrayKey=PBINTRAY_KEY -PdryRun=false

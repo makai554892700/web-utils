@@ -19,6 +19,7 @@ public class HttpUtils {
 
     private static final String HTTPS = "https";
     private static final String GET = "GET";
+    private static final String DELETE = "DELETE";
     private static final String PUT = "PUT";
     private static final String POST = "POST";
 
@@ -30,21 +31,35 @@ public class HttpUtils {
 
     }
 
-    public static String getURLStrResponse(String urlString, HashMap<String, String> heads, Charset charset) {
-        return new String(getURLResponse(urlString, heads), charset);
-    }
-
-    public static String getURLStrResponse(String urlString, HashMap<String, String> heads) {
-        return new String(getURLResponse(urlString, heads), StandardCharsets.UTF_8);
-    }
-
     public static byte[] getURLResponse(String urlString, HashMap<String, String> heads) {
-        return getURLResponse(urlString, heads, 5 * 1000);
+        return getURLResponse(GET, urlString, heads, 5 * 1000);
     }
 
-    public static byte[] getURLResponse(String urlString, HashMap<String, String> heads, int timeOut) {
+    public static byte[] deleteURLResponse(String urlString, HashMap<String, String> heads) {
+        return getURLResponse(DELETE, urlString, heads, 5 * 1000);
+    }
+
+    public static byte[] putURLResponse(String urlString, HashMap<String, String> headers, byte[] postData) {
+        return postURLResponse(PUT, urlString, headers, postData, 5 * 1000);
+    }
+
+    public static byte[] postURLResponse(String urlString, HashMap<String, String> headers, byte[] postData) {
+        return postURLResponse(POST, urlString, headers, postData, 5 * 1000);
+    }
+
+    public static void getURLResponse(String urlString, HashMap<String, String> heads, Proxy proxy
+            , IWebCallback iWebCallback) {
+        getURLResponse(urlString, heads, proxy, iWebCallback, 5 * 1000);
+    }
+
+    public static void postURLResponse(String urlString, HashMap<String, String> headers
+            , byte[] postData, IWebCallback iWebCallback) {
+        postURLResponse(urlString, headers, postData, iWebCallback, 5 * 1000);
+    }
+
+    public static byte[] getURLResponse(String requestType, String urlString, HashMap<String, String> heads, int timeOut) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        commonRequest(GET, urlString, heads, null, new IWebCallback() {
+        commonRequest(requestType, urlString, heads, null, new IWebCallback() {
             @Override
             public void onCallback(int status, String message, Map<String, List<String>> heard, byte[] data) {
                 try {
@@ -68,10 +83,6 @@ public class HttpUtils {
         getURLResponse(urlString, heads, null, iWebCallback);
     }
 
-    public static void getURLResponse(String urlString, HashMap<String, String> heads, Proxy proxy, IWebCallback iWebCallback) {
-        getURLResponse(urlString, heads, proxy, iWebCallback, 5 * 1000);
-    }
-
     public static void getURLResponse(String urlString, HashMap<String, String> heads, Proxy proxy
             , IWebCallback iWebCallback, int timeOut) {
         getURLResponse(urlString, heads, proxy, iWebCallback, timeOut, true);
@@ -82,13 +93,14 @@ public class HttpUtils {
         commonRequest(GET, urlString, heads, null, iWebCallback, timeOut, proxy, followRedirect);
     }
 
-    public static byte[] postURLResponse(String urlString, HashMap<String, String> headers, byte[] postData) {
-        return postURLResponse(urlString, headers, postData, 5 * 1000);
+    public static void postURLResponse(String urlString, HashMap<String, String> headers
+            , byte[] postData, IWebCallback iWebCallback, int timeOut) {
+        commonRequest(POST, urlString, headers, postData, iWebCallback, timeOut, null, false);
     }
 
-    public static byte[] postURLResponse(String urlString, HashMap<String, String> headers, byte[] postData, int timeOut) {
+    public static byte[] postURLResponse(String requestType, String urlString, HashMap<String, String> headers, byte[] postData, int timeOut) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        commonRequest(POST, urlString, headers, postData, new IWebCallback() {
+        commonRequest(requestType, urlString, headers, postData, new IWebCallback() {
             @Override
             public void onCallback(int status, String message, Map<String, List<String>> heard, byte[] data) {
                 try {
@@ -108,18 +120,7 @@ public class HttpUtils {
         return result;
     }
 
-    public static void postURLResponse(String urlString, HashMap<String, String> headers
-            , byte[] postData, IWebCallback iWebCallback) {
-        postURLResponse(urlString, headers, postData, iWebCallback, 5 * 1000);
-    }
-
-    public static void postURLResponse(String urlString, HashMap<String, String> headers
-            , byte[] postData, IWebCallback iWebCallback, int timeOut) {
-        commonRequest(POST, urlString, headers, postData, iWebCallback, timeOut, null, false);
-    }
-
-
-    private static void commonRequest(String requestType, String urlString, HashMap<String, String> headers
+    public static void commonRequest(String requestType, String urlString, HashMap<String, String> headers
             , byte[] postData, IWebCallback iWebCallback, int timeOut, Proxy proxy, boolean followRedirect) {
         if (urlString != null) {
             HttpURLConnection conn = null; //连接对象

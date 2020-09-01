@@ -135,8 +135,8 @@ public class WeChatUtils {
         AccessTokenResponse accessTokenResponse = getAccessToken(appId, secret, authCode);
         if (accessTokenResponse != null && accessTokenResponse.accessToken != null) {
             String host = String.format(GET_USER_INFO, accessTokenResponse.accessToken, accessTokenResponse.openid);
-            String response = HttpUtils.getURLStrResponse(host, null);
-            if (!response.isEmpty()) {
+            byte[] response = HttpUtils.getURLResponse(host, null);
+            if (response != null) {
                 try {
                     result = JSON.parseObject(response, WeChatUserResponse.class);
                     if (result.unionid == null) {
@@ -152,12 +152,12 @@ public class WeChatUtils {
 
     public static AccessTokenResponse getAccessToken(String appId, String secret, String authCode) {
         String host = String.format(GET_ACCESS_TOKEN_FORMAT, appId, secret, authCode);
-        String response = HttpUtils.getURLStrResponse(host, null);
-        if (!response.isEmpty()) {
+        byte[] response = HttpUtils.getURLResponse(host, null);
+        if (response != null) {
             try {
-                return JSON.parseObject(response, AccessTokenResponse.class);
+                return JSON.parseObject(new String(response), AccessTokenResponse.class);
             } catch (Exception e) {
-                log.log(Level.WARNING, "getAccessToken error.e=" + e + ";response=" + response);
+                log.log(Level.WARNING, "getAccessToken error.e=" + e + ";response=" + new String(response));
             }
         }
         return null;
