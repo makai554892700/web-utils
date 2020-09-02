@@ -13,7 +13,7 @@ public class DownloadUtils {
     private static final Logger log = Logger.getLogger(DownloadUtils.class.getName());
 
     private static final String HTTPS = "https";
-    private static final String GET = "get";
+    private static final String GET = "GET";
 
     public static UrlResponse url2InputStream(String urlString) {
         return url2InputStream(urlString, null, 5 * 1000);
