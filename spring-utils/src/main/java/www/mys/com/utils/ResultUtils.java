@@ -23,6 +23,9 @@ public class ResultUtils {
     }
 
     public static <T> T getResult(Result<T> response) {
+        if (response == null) {
+            return null;
+        }
         if (response.getCode() != ResultUtils.SUCCESS_CODE) {
             throw new BaseException(response.getMessage(), response.getCode());
         } else {
