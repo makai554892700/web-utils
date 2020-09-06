@@ -7,4 +7,5 @@ include 'base-utils'
 include 'all-utils'
 include 'spring-utils'
 include 'jwt-utils'
+include 'oauth2-utils'
 

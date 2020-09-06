@@ -1,0 +1,27 @@
+//apply plugin: 'com.novoda.bintray-release'
+//buildscript {
+//    repositories {
+//        jcenter()
+//    }
+//    dependencies {
+//        classpath 'com.novoda:bintray-release:0.9.2'
+//    }
+//}
+//publish {
+//    userOrg = 'marking'
+//    groupId = 'com.mys.www'
+//    artifactId = 'oauth2-utils'
+//    publishVersion = '0.0.1'
+//    desc = 'oauth2 utils.'
+//    website = 'https://github.com/makai554892700/web-utils'
+//}
+
+version '0.0.1'
+archivesBaseName = 'oauth2-utils'
+jar.enabled = true
+bootJar.enabled = false
+dependencies {
+    compileOnly("mysql:mysql-connector-java")
+    compileOnly("org.springframework.boot:spring-boot-starter-data-jpa")
+}
+//上传jar包命令： gradlew clean build bintrayUpload -PbintrayUser=PBINTRAY_NAME -PbintrayKey=PBINTRAY_KEY -PdryRun=false
