@@ -1,9 +1,9 @@
-package www.mys.com.utils.mapper;
+package www.mys.com.oauth2user.mapper;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import www.mys.com.utils.pojo.PersistentLogins;
+import www.mys.com.oauth2user.pojo.PersistentLogins;
 
 @Repository("persistentLoginsMapper")
 public interface PersistentLoginsMapper extends JpaRepository<PersistentLogins, Integer> {

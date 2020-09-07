@@ -1,4 +1,4 @@
-package www.mys.com.utils.pojo;
+package www.mys.com.oauth2.pojo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

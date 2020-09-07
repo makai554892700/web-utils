@@ -11,12 +11,12 @@
 //    userOrg = 'marking'
 //    groupId = 'com.mys.www'
 //    artifactId = 'oauth2-utils'
-//    publishVersion = '0.0.1'
+//    publishVersion = '0.0.2'
 //    desc = 'oauth2 utils.'
 //    website = 'https://github.com/makai554892700/web-utils'
 //}
 
-version '0.0.1'
+version '0.0.2'
 archivesBaseName = 'oauth2-utils'
 jar.enabled = true
 bootJar.enabled = false

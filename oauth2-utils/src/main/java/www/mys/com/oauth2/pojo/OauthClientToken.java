@@ -1,27 +1,25 @@
-package www.mys.com.utils.pojo;
+package www.mys.com.oauth2.pojo;
 
 import org.hibernate.annotations.Type;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import java.util.Arrays;
 
 @Entity
-public class OauthAccessToken {
+public class OauthClientToken {
 
     @Id
+    @Column(nullable = false, length = 128)
     private String authenticationId;
     private String tokenId;
     @Lob
-    @Type(type = "org.hibernate.type.ImageType")
+    @Type(type="org.hibernate.type.ImageType")
     private byte[] token;
     private String userName;
     private String clientId;
-    @Lob
-    @Type(type = "org.hibernate.type.ImageType")
-    private byte[] authentication;
-    private String refreshToken;
 
     public String getAuthenticationId() {
         return authenticationId;
@@ -63,32 +61,14 @@ public class OauthAccessToken {
         this.clientId = clientId;
     }
 
-    public byte[] getAuthentication() {
-        return authentication;
-    }
-
-    public void setAuthentication(byte[] authentication) {
-        this.authentication = authentication;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
-
     @Override
     public String toString() {
-        return "OauthAccessToken{" +
+        return "OauthClientToken{" +
                 "authenticationId='" + authenticationId + '\'' +
                 ", tokenId='" + tokenId + '\'' +
                 ", token=" + Arrays.toString(token) +
                 ", userName='" + userName + '\'' +
                 ", clientId='" + clientId + '\'' +
-                ", authentication=" + Arrays.toString(authentication) +
-                ", refreshToken='" + refreshToken + '\'' +
                 '}';
     }
 }
