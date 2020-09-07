@@ -16,9 +16,6 @@ public class MyPropertySourceFactory extends DefaultPropertySourceFactory {
     @Override
     public PropertySource<?> createPropertySource(String name, EncodedResource resource) throws IOException {
         log.log(Level.WARNING, "createPropertySource fileName=" + resource.getResource().getFile().getAbsolutePath() + ";name=" + name);
-        if (resource == null) {
-            return super.createPropertySource(name, resource);
-        }
         List<PropertySource<?>> sources = new YamlPropertySourceLoader().load(resource.getResource().getFilename(), resource.getResource());
         return sources.get(0);
     }
