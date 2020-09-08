@@ -121,35 +121,9 @@ public class HttpUtils {
 
     public static void commonRequest(String requestType, String urlString, HashMap<String, String> headers
             , byte[] data, IWebCallback iWebCallback, int timeOut, Proxy proxy, boolean followRedirect) {
-        File tempFile;
-        try {
-            tempFile = File.createTempFile(String.valueOf(System.currentTimeMillis()) + new Random().nextInt(1000)
-                    , ".io");
-        } catch (Exception e) {
-            log.log(Level.WARNING, "create temp file error.e=" + e);
-            return;
-        }
-        FileOutputStream fileOutputStream;
-        try {
-            fileOutputStream = new FileOutputStream(tempFile);
-            fileOutputStream.write(data == null ? "".getBytes() : data);
-            fileOutputStream.flush();
-        } catch (Exception e) {
-            log.log(Level.WARNING, "get file output stream error.e=" + e);
-            tempFile.delete();
-            return;
-        }
-        FileInputStream fileInputStream;
-        try {
-            fileInputStream = new FileInputStream(tempFile);
-        } catch (Exception e) {
-            log.log(Level.WARNING, "get file input stream error.e=" + e);
-            tempFile.delete();
-            return;
-        }
-        commonRequest(requestType, urlString, headers, fileInputStream, iWebCallback, timeOut, proxy, followRedirect);
-        closeSilently(fileInputStream);
-        tempFile.delete();
+        InputStream inputStream = new ByteArrayInputStream(data == null ? "".getBytes() : data);
+        commonRequest(requestType, urlString, headers, inputStream, iWebCallback, timeOut, proxy, followRedirect);
+        closeSilently(inputStream);
     }
 
     public static void commonRequest(String requestType, String urlString, HashMap<String, String> headers
