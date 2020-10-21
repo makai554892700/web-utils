@@ -224,96 +224,33 @@ public class FileUtils {
     }
 
     public static boolean readLine(InputStream is, LineBack lineBack) {
-        boolean result = false;
-        if (lineBack != null && is != null) {
-            InputStreamReader inputStreamReader;
-            TempStream tempStream;
-            try {
-                tempStream = codeString(is);
-                is = tempStream.inputStream;
-                inputStreamReader = new InputStreamReader(is, tempStream.charset);
-            } catch (Exception e) {
-                log.log(Level.WARNING, "e1=" + e);
-                return false;
+        return readLine(is, lineBack, false);
+    }
+
+    public static boolean readLine(InputStream inputStream, LineBack lineBack, boolean close) {
+        if (lineBack == null) {
+            if (close) {
+                CloseUtils.closeSilently(inputStream);
             }
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            result = onLine(lineBack, bufferedReader, tempStream.charset);
-            CloseUtils.closeReader(bufferedReader);
-            CloseUtils.closeReader(inputStreamReader);
-        } else {
-            log.log(Level.WARNING, "is is null or lineBack is null;is=" + is + ";lineBack=" + lineBack);
+            return false;
         }
-        return result;
-    }
-
-    public static class TempStream {
-        public InputStream inputStream;
-        public Charset charset;
-    }
-
-    public static TempStream codeString(InputStream inputStream) throws Exception {
-        TempStream result = new TempStream();
-        byte[] data = inputStream2Bytes(inputStream);
-        result.charset = charset(new ByteArrayInputStream(data));
-        result.inputStream = new ByteArrayInputStream(data);
-//        log.log(Level.WARNING,"charset=" + result.charset);
-        return result;
-    }
-
-    public static Charset charset(InputStream inputStream) {
-        String charset = "GBK";
-        byte[] first3Bytes = new byte[3];
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        BufferedReader reader = new BufferedReader(inputStreamReader);
         try {
-            boolean checked = false;
-            BufferedInputStream bis = new BufferedInputStream(inputStream);
-            bis.mark(0);
-            int read = bis.read(first3Bytes, 0, 3);
-            if (read == -1) {
-                bis.close();
-                return Charset.forName(charset);
-            } else if (first3Bytes[0] == (byte) 0xFF && first3Bytes[1] == (byte) 0xFE) {
-                charset = "UTF-16LE";
-                checked = true;
-            } else if (first3Bytes[0] == (byte) 0xFE && first3Bytes[1] == (byte) 0xFF) {
-                charset = "UTF-16BE";
-                checked = true;
-            } else if (first3Bytes[0] == (byte) 0xEF && first3Bytes[1] == (byte) 0xBB
-                    && first3Bytes[2] == (byte) 0xBF) {
-                charset = "UTF-8";
-                checked = true;
+            while (reader.ready()) {
+                lineBack.onLine(reader.readLine());
             }
-            bis.reset();
-            if (!checked) {
-                while ((read = bis.read()) != -1) {
-                    if (read >= 0xF0)
-                        break;
-                    if (0x80 <= read && read <= 0xBF)
-                        break;
-                    if (0xC0 <= read && read <= 0xDF) {
-                        read = bis.read();
-                        if (0x80 <= read && read <= 0xBF)
-                            continue;
-                        else
-                            break;
-                    } else if (0xE0 <= read && read <= 0xEF) {
-                        read = bis.read();
-                        if (0x80 <= read && read <= 0xBF) {
-                            read = bis.read();
-                            if (0x80 <= read && read <= 0xBF) {
-                                charset = "UTF-8";
-                                break;
-                            } else
-                                break;
-                        } else
-                            break;
-                    }
-                }
-            }
-            bis.close();
         } catch (Exception e) {
-            log.log(Level.WARNING, "e=" + e);
+            log.log(Level.WARNING, "ready line error.e==" + e + ";lineBack=" + lineBack);
+            return false;
+        } finally {
+            CloseUtils.closeReader(reader);
+            CloseUtils.closeReader(inputStreamReader);
+            if (close) {
+                CloseUtils.closeSilently(inputStream);
+            }
         }
-        return Charset.forName(charset);
+        return true;
     }
 
     public static boolean readLine(String filePath, LineBack lineBack) {
@@ -322,50 +259,21 @@ public class FileUtils {
             lineBack.onStart(filePath);
             File file = new File(filePath);
             if (file.exists()) {
-                FileReader fileReader = null;
-                TempStream tempStream;
+                InputStream inputStream;
                 try {
-                    tempStream = codeString(new FileInputStream(filePath));
-                    fileReader = new FileReader(file);
+                    inputStream = new FileInputStream(file);
                 } catch (Exception e) {
-                    log.log(Level.WARNING, "e1=" + e);
+                    lineBack.onEnd(filePath);
+                    log.log(Level.WARNING, "new fileInputStream error;filePath=" + filePath + ";lineBack=" + lineBack);
                     return false;
                 }
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
-                result = onLine(lineBack, bufferedReader, tempStream.charset);
-                CloseUtils.closeReader(bufferedReader);
-                CloseUtils.closeReader(fileReader);
+                result = readLine(inputStream, lineBack, true);
             }
             lineBack.onEnd(filePath);
         } else {
             log.log(Level.WARNING, "filePath is null or lineBack is null;filePath=" + filePath + ";lineBack=" + lineBack);
         }
         return result;
-    }
-
-    private static boolean onLine(LineBack lineBack, BufferedReader bufferedReader, Charset charset) {
-        StringBuilder tempString = new StringBuilder();
-        String line, tempStr;
-        while (true) {
-            try {
-                tempStr = bufferedReader.readLine();
-                if (tempStr == null) {
-                    return true;
-                }
-                tempString.append(tempStr);
-            } catch (Exception e) {
-                log.log(Level.WARNING, "e1=" + e);
-                return false;
-            }
-//            log.log(Level.WARNING,"line1=" + tempString);
-//            log.log(Level.WARNING,"line2=" + new String(tempString.toString().getBytes(), StandardCharsets.UTF_8));
-//            log.log(Level.WARNING,"line3=" + new String(tempString.toString().getBytes(charset), StandardCharsets.UTF_8));
-//            log.log(Level.WARNING,"line4=" + new String(tempString.toString().getBytes(StandardCharsets.UTF_8), charset));
-            line = new String(tempString.toString().getBytes(), StandardCharsets.UTF_8);
-            lineBack.onLine(line);
-//            log.log(Level.WARNING,"line=" + line);
-            tempString.delete(0, tempString.length());
-        }
     }
 
     public interface AllBack {
