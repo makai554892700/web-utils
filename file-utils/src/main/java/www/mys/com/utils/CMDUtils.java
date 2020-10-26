@@ -1,6 +1,5 @@
 package www.mys.com.utils;
 
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +9,7 @@ import java.util.logging.Logger;
 public class CMDUtils {
 
     private static final Logger log = Logger.getLogger(CMDUtils.class.getName());
+
     private static boolean mHaveRoot = false;
 
     public static boolean haveRoot() {
@@ -39,8 +39,8 @@ public class CMDUtils {
         } catch (Exception e) {
             log.log(Level.WARNING, "e=" + e);
         } finally {
-            closeSilently(dos);
-            closeSilently(dis);
+            CloseUtils.closeSilently(dos);
+            CloseUtils.closeSilently(dis);
         }
         log.log(Level.WARNING, "run root cmd=" + cmd + "\n" + stringBuilder);
         return stringBuilder.toString();
@@ -61,74 +61,124 @@ public class CMDUtils {
         } catch (Exception e) {
             log.log(Level.WARNING, "e=" + e);
         } finally {
-            closeSilently(dos);
+            CloseUtils.closeSilently(dos);
         }
         return result;
     }
 
     public static String run(final String str) {
-        return run(new ArrayList<String>() {{
-            add(str);
-        }});
-    }
-
-    public static String run(List<String> strs) {
         StringBuilder result = new StringBuilder();
-        if (strs != null && strs.size() > 0) {
-            Runtime runtime = Runtime.getRuntime();
-            for (String str : strs) {
-                commonRun(result, runtime, str);
+        run(new ArrayList<String>() {{
+            add(str);
+        }}, new RunBack() {
+            private int messageCount, errorCount;
+
+            @Override
+            public void onStart(String cmd) {
             }
-        }
+
+            @Override
+            public void onMessage(String message) {
+                result.append(message);
+                if (messageCount++ > 0) {
+                    result.append("\n");
+                }
+            }
+
+            @Override
+            public void onError(String message) {
+                result.append(message);
+                if (errorCount++ > 0) {
+                    result.append("\n");
+                }
+            }
+
+            @Override
+            public void onEnd(String cmd, int exitCode) {
+            }
+        });
         return result.toString();
     }
 
-    private static void commonRun(StringBuilder result, Runtime runtime, String str) {
+    public static void run(final String str, RunBack runBack) {
+        run(new ArrayList<String>() {{
+            add(str);
+        }}, runBack);
+    }
+
+    public static void run(List<String> strs, RunBack runBack) {
+        if (strs != null && strs.size() > 0) {
+            Runtime runtime = Runtime.getRuntime();
+            for (String str : strs) {
+                commonRun(runtime, str, runBack);
+            }
+        }
+    }
+
+    private static int commonRun(Runtime runtime, String str, RunBack runBack) {
+        runBack.onStart(str);
         Process process;
         try {
             process = runtime.exec(str);
         } catch (Exception e) {
             log.log(Level.WARNING, "e=" + e);
-            return;
+            runBack.onEnd(str, -1);
+            return -1;
         }
-        InputStream inputStream = process.getInputStream();
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        byte[] temp = new byte[8192];
-        int len;
         try {
-            while ((len = inputStream.read(temp)) > 0) {
-                byteArrayOutputStream.write(temp, 0, len);
-            }
-            result.append(byteArrayOutputStream).append("\n");
+            process.waitFor();
+        } catch (Exception e) {
+            log.log(Level.WARNING, "e=" + e);
+            runBack.onEnd(str, -1);
+            return -1;
+        }
+        int resultCode = process.exitValue();
+        log.log(Level.WARNING, "exit code=" + resultCode);
+        if (resultCode < 0 || resultCode > 1) {
+            log.log(Level.WARNING, "cmd error.code=" + resultCode);
+        }
+        commonRead(process.getErrorStream(), runBack, true);
+        commonRead(process.getInputStream(), runBack, false);
+        runBack.onEnd(str, resultCode);
+        return resultCode;
+    }
+
+    private static void commonRead(InputStream inputStream, final RunBack runBack
+            , final boolean isError) {
+        try {
+            FileUtils.readLine(inputStream, new FileUtils.LineBack() {
+                @Override
+                public void onStart(String fileName) {
+                }
+
+                @Override
+                public void onLine(String line) {
+                    if (isError) {
+                        runBack.onError(line);
+                    } else {
+                        runBack.onMessage(line);
+                    }
+                }
+
+                @Override
+                public void onEnd(String fileName) {
+                }
+            });
         } catch (Exception e) {
             log.log(Level.WARNING, "e=" + e);
         } finally {
-            closeSilently(inputStream);
-        }
-        if (result.length() == 0) {
-            inputStream = process.getErrorStream();
-            byteArrayOutputStream = new ByteArrayOutputStream();
-            try {
-                while ((len = inputStream.read(temp)) > 0) {
-                    byteArrayOutputStream.write(temp, 0, len);
-                }
-                result.append(byteArrayOutputStream).append("\n");
-            } catch (Exception e) {
-                log.log(Level.WARNING, "e=" + e);
-            } finally {
-                closeSilently(inputStream);
-            }
+            CloseUtils.closeSilently(inputStream);
         }
     }
 
-    private static void closeSilently(Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (Exception e) {
-                log.log(Level.WARNING, "e=" + e);
-            }
-        }
-    }
+    public static interface RunBack {
 
+        public void onStart(String cmd);
+
+        public void onMessage(String message);
+
+        public void onError(String message);
+
+        public void onEnd(String cmd, int exitCode);
+    }
 }
