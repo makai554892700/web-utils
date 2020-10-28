@@ -234,6 +234,7 @@ public class FileUtils {
             }
             return false;
         }
+        lineBack.onStart(null);
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
         BufferedReader reader = new BufferedReader(inputStreamReader);
         try {
@@ -249,6 +250,7 @@ public class FileUtils {
             if (close) {
                 CloseUtils.closeSilently(inputStream);
             }
+            lineBack.onEnd(null);
         }
         return true;
     }
