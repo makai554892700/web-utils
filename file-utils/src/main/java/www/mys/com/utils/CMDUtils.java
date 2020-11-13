@@ -67,8 +67,12 @@ public class CMDUtils {
     }
 
     public static String run(final String str) {
+        return run(str.split(" "));
+    }
+
+    public static String run(final String[] str) {
         StringBuilder result = new StringBuilder();
-        run(new ArrayList<String>() {{
+        run(new ArrayList<String[]>() {{
             add(str);
         }}, new RunBack() {
             private int messageCount, errorCount;
@@ -101,35 +105,43 @@ public class CMDUtils {
     }
 
     public static void run(final String str, RunBack runBack) {
-        run(new ArrayList<String>() {{
+        run(str.split(" "), runBack);
+    }
+
+    public static void run(final String[] str, RunBack runBack) {
+        run(new ArrayList<String[]>() {{
             add(str);
         }}, runBack);
     }
 
-    public static void run(List<String> strs, RunBack runBack) {
+    public static void run(List<String[]> strs, RunBack runBack) {
         if (strs != null && strs.size() > 0) {
             Runtime runtime = Runtime.getRuntime();
-            for (String str : strs) {
+            for (String[] str : strs) {
                 commonRun(runtime, str, runBack);
             }
         }
     }
 
-    private static int commonRun(Runtime runtime, String str, RunBack runBack) {
-        runBack.onStart(str);
+    private static int commonRun(Runtime runtime, String[] strs, RunBack runBack) {
+        StringBuilder cmdStr = new StringBuilder();
+        for (String str : strs) {
+            cmdStr.append(str).append(" ");
+        }
+        runBack.onStart(cmdStr.toString());
         Process process;
         try {
-            process = runtime.exec(str);
+            process = runtime.exec(strs);
         } catch (Exception e) {
             log.log(Level.WARNING, "e=" + e);
-            runBack.onEnd(str, -1);
+            runBack.onEnd(cmdStr.toString(), -1);
             return -1;
         }
         try {
             process.waitFor();
         } catch (Exception e) {
             log.log(Level.WARNING, "e=" + e);
-            runBack.onEnd(str, -1);
+            runBack.onEnd(cmdStr.toString(), -1);
             return -1;
         }
         int resultCode = process.exitValue();
@@ -139,7 +151,7 @@ public class CMDUtils {
         }
         commonRead(process.getErrorStream(), runBack, true);
         commonRead(process.getInputStream(), runBack, false);
-        runBack.onEnd(str, resultCode);
+        runBack.onEnd(cmdStr.toString(), resultCode);
         return resultCode;
     }
 
