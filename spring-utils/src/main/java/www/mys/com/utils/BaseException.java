@@ -7,7 +7,7 @@ public class BaseException extends RuntimeException {
 
     private Integer code;
 
-    public BaseException(@NotNull BaseResultEnum baseResultEnum) {
+    public BaseException(@NotNull ExceptionInfo baseResultEnum) {
         super(baseResultEnum.getMsg());
         code = baseResultEnum.getCode();
     }

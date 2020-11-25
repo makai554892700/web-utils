@@ -3,7 +3,6 @@ package www.mys.com.utils.service.impl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import www.mys.com.utils.BaseException;
-import www.mys.com.utils.BaseResultEnum;
 import www.mys.com.utils.DataTransfer;
 import www.mys.com.utils.mapper.CommonMapper;
 import www.mys.com.utils.service.CommonService;
@@ -29,7 +28,7 @@ public abstract class CommonServiceImpl<Req, Res, Real, V> extends DataTransfer<
     public Res updateData(V id, Req data) {
         Real real = getCommonMapper().getById(id);
         if (real == null) {
-            throw new BaseException(BaseResultEnum.NO_SUCH_DATA);
+            throw new BaseException("no such data.", -10086);
         }
         updateReal(data, real);
         getCommonMapper().save(real);
