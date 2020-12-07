@@ -27,7 +27,17 @@ public class JWTUtils {
         try {
             return createToken(privateKey, expiration, claims);
         } catch (Exception e) {
-            throw new BaseException(BaseResultEnum.TOKEN_ERROR);
+            throw new BaseException(new ExceptionInfo() {
+                @Override
+                public String getMsg() {
+                    return "create token error.";
+                }
+
+                @Override
+                public Integer getCode() {
+                    return -3;
+                }
+            });
         }
     }
 
@@ -60,10 +70,30 @@ public class JWTUtils {
             claims = getClaimsFromToken(publicKeyStr, token);
         } catch (Exception e) {
             log.log(Level.WARNING, "getUsernameFromToken error.e=" + e);
-            throw new BaseException(BaseResultEnum.TOKEN_ERROR);
+            throw new BaseException(new ExceptionInfo() {
+                @Override
+                public String getMsg() {
+                    return "token error.";
+                }
+
+                @Override
+                public Integer getCode() {
+                    return -3;
+                }
+            });
         }
         if (checkTime && isExpired(claims)) {
-            throw new BaseException(BaseResultEnum.TOKEN_OUT_TIME);
+            throw new BaseException(new ExceptionInfo() {
+                @Override
+                public String getMsg() {
+                    return "token out of time.";
+                }
+
+                @Override
+                public Integer getCode() {
+                    return -3;
+                }
+            });
         }
         return claims;
     }

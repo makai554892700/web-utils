@@ -112,6 +112,16 @@ public class PageUtils {
                     }
                 };
             }
+
+            @Override
+            public Pageable getPageable() {
+                return page.getPageable();
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return page.isEmpty();
+            }
         };
     }
 
