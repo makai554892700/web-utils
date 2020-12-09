@@ -15,7 +15,7 @@ public class IPUtils {
     private static final String IP_SPLIT = "\\.";
     private static final String IP_ZERO = "0.0.0.0";
     private static Pattern pattern = Pattern.compile("((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}");
-    private static final String URL_GET_HTTPS_IP = "https://api.ip.sb/ip";
+    private static final String URL_GET_HTTPS_IP = "http://www.woaizhuangbi.com";
 
     public static String getProxyIP(Proxy proxy) {
         return getProxyIP(proxy, 5 * 1000);
