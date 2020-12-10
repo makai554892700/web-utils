@@ -1,5 +1,9 @@
 package www.mys.com.utils.vo.response;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,6 +20,52 @@ public class ResponsePage<T> implements Serializable {
     private int numberOfElements;
     private boolean first;
     private boolean empty;
+
+    public ResponsePage() {
+    }
+
+    public ResponsePage(Page<T> page) {
+        setContent(page.getContent());
+        Sort sort = page.getSort();
+        ResponsePage.ResponseSort responseSort = new ResponsePage.ResponseSort();
+        responseSort.setSorted(sort.isSorted());
+        responseSort.setEmpty(sort.isEmpty());
+        responseSort.setUnsorted(sort.isUnsorted());
+        setSort(responseSort);
+        Pageable pageable = page.getPageable();
+        ResponsePage.ResponsePageable responsePageable = new ResponsePage.ResponsePageable();
+        responsePageable.setSort(responseSort);
+        responsePageable.setOffset(pageable.getOffset());
+        responsePageable.setPageSize(pageable.getPageSize());
+        responsePageable.setPageNumber(pageable.getPageNumber());
+        responsePageable.setPaged(pageable.isPaged());
+        responsePageable.setUnpaged(pageable.isUnpaged());
+        setPageable(responsePageable);
+        setTotalElements(page.getTotalElements());
+        setLast(page.isLast());
+        setTotalPages(page.getTotalPages());
+        setNumber(page.getNumber());
+        setSize(page.getSize());
+        setNumberOfElements(page.getNumberOfElements());
+        setFirst(page.isFirst());
+        setEmpty(page.isEmpty());
+    }
+
+    public ResponsePage(List<T> content, ResponsePageable pageable, long totalElements, boolean last
+            , int totalPages, int number, long size, ResponseSort sort, int numberOfElements
+            , boolean first, boolean empty) {
+        this.content = content;
+        this.pageable = pageable;
+        this.totalElements = totalElements;
+        this.last = last;
+        this.totalPages = totalPages;
+        this.number = number;
+        this.size = size;
+        this.sort = sort;
+        this.numberOfElements = numberOfElements;
+        this.first = first;
+        this.empty = empty;
+    }
 
     public List<T> getContent() {
         return content;
@@ -130,6 +180,19 @@ public class ResponsePage<T> implements Serializable {
         private boolean paged;
         private boolean unpaged;
 
+        public ResponsePageable() {
+        }
+
+        public ResponsePageable(ResponseSort sort, long offset, long pageSize, int pageNumber
+                , boolean paged, boolean unpaged) {
+            this.sort = sort;
+            this.offset = offset;
+            this.pageSize = pageSize;
+            this.pageNumber = pageNumber;
+            this.paged = paged;
+            this.unpaged = unpaged;
+        }
+
         public ResponseSort getSort() {
             return sort;
         }
@@ -195,6 +258,15 @@ public class ResponsePage<T> implements Serializable {
         private boolean sorted;
         private boolean unsorted;
         private boolean empty;
+
+        public ResponseSort() {
+        }
+
+        public ResponseSort(boolean sorted, boolean unsorted, boolean empty) {
+            this.sorted = sorted;
+            this.unsorted = unsorted;
+            this.empty = empty;
+        }
 
         public boolean isSorted() {
             return sorted;
