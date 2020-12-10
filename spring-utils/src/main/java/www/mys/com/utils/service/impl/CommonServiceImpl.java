@@ -1,11 +1,11 @@
 package www.mys.com.utils.service.impl;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import www.mys.com.utils.BaseException;
 import www.mys.com.utils.DataTransfer;
 import www.mys.com.utils.mapper.CommonMapper;
 import www.mys.com.utils.service.CommonService;
+import www.mys.com.utils.vo.response.ResponsePage;
 
 public abstract class CommonServiceImpl<Req, Res, Real, V> extends DataTransfer<Req, Res, Real>
         implements CommonService<Req, Res, V> {
@@ -21,7 +21,7 @@ public abstract class CommonServiceImpl<Req, Res, Real, V> extends DataTransfer<
     }
 
     @Override
-    public Page<Res> getDatas(Integer page, Integer count) {
+    public ResponsePage<Res> getDatas(Integer page, Integer count) {
         return real2Res(getCommonMapper().findAll(PageRequest.of(page, count)));
     }
 

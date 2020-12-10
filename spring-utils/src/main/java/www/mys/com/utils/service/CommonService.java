@@ -1,6 +1,6 @@
 package www.mys.com.utils.service;
 
-import org.springframework.data.domain.Page;
+import www.mys.com.utils.vo.response.ResponsePage;
 
 public interface CommonService<Req, Res, V> {
 
@@ -8,7 +8,7 @@ public interface CommonService<Req, Res, V> {
 
     public Res getData(V id);
 
-    public Page<Res> getDatas(Integer page, Integer count);
+    public ResponsePage<Res> getDatas(Integer page, Integer count);
 
     public Res updateData(V id, Req data);
 

@@ -1,6 +1,7 @@
 package www.mys.com.utils;
 
 import org.springframework.data.domain.Page;
+import www.mys.com.utils.vo.response.ResponsePage;
 
 public abstract class DataTransfer<Req, Res, Real> {
 
@@ -8,7 +9,7 @@ public abstract class DataTransfer<Req, Res, Real> {
 
     public abstract Res real2Res(Real real);
 
-    public Page<Res> real2Res(Page<Real> reals) {
+    public ResponsePage<Res> real2Res(Page<Real> reals) {
         return PageUtils.transferPage(reals, this);
     }
 

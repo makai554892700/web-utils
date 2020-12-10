@@ -1,13 +1,13 @@
 package www.mys.com.utils.controller;
 
 import io.swagger.annotations.*;
-import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import www.mys.com.utils.Result;
 import www.mys.com.utils.ResultUtils;
 import www.mys.com.utils.api.CommonApi;
 import www.mys.com.utils.service.CommonService;
+import www.mys.com.utils.vo.response.ResponsePage;
 
 import javax.validation.Valid;
 
@@ -39,7 +39,7 @@ public abstract class CommonController<Req, Res, V> implements CommonApi<Req, Re
             @ApiImplicitParam(name = "count", value = "count", dataTypeClass = Integer.class),
     })
     @GetMapping(value = "/datas")
-    public Result<Page<Res>> getDatas(@RequestParam(required = false, defaultValue = "0") Integer page
+    public Result<ResponsePage<Res>> getDatas(@RequestParam(required = false, defaultValue = "0") Integer page
             , @RequestParam(required = false, defaultValue = "10") Integer count) {
         return ResultUtils.succeed(getCommonService().getDatas(page, count));
     }
