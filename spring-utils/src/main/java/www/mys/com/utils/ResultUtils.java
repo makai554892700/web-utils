@@ -2,9 +2,9 @@ package www.mys.com.utils;
 
 public class ResultUtils {
 
-    public static int SUCCESS_CODE = 200;
-    public static int FIELD_CODE = -1;
-    public static int ERROR_CODE = -2;
+    public static Integer SUCCESS_CODE = 200;
+    public static Integer FIELD_CODE = -1;
+    public static Integer ERROR_CODE = -2;
 
     public static <T> Result<T> succeed(T data) {
         return new Result<T>(SUCCESS_CODE, "success", data);
