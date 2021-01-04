@@ -10,18 +10,17 @@
 //publish {
 //    userOrg = 'marking'
 //    groupId = 'com.mys.www'
-//    artifactId = 'base-utils'
-//    publishVersion = '0.0.2'
-//    desc = 'base utils.'
-//    website = 'https://github.com/makai554892700/web-utils/tree/master/base-utils'
+//    artifactId = 'websocket'
+//    publishVersion = '0.0.1'
+//    desc = 'websocket utils.'
+//    website = 'https://github.com/makai554892700/web-utils/tree/master/websocket'
 //}
 
-version '0.0.2'
-archivesBaseName = 'base-utils'
+version '0.0.1'
+archivesBaseName = 'websocket'
 jar.enabled = true
 bootJar.enabled = false
-dependencies {}
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
+dependencies {
+    compileOnly("io.netty:netty-all:4.1.48.Final")
 }
 //上传jar包命令： gradlew clean build bintrayUpload -PbintrayUser=PBINTRAY_NAME -PbintrayKey=PBINTRAY_KEY -PdryRun=false

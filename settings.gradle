@@ -9,4 +9,5 @@ include 'spring-utils'
 include 'jwt-utils'
 include 'oauth2-utils'
 include 'oauth2-user-utils'
+include 'websocket'
 
