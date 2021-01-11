@@ -11,12 +11,12 @@
 //    userOrg = 'marking'
 //    groupId = 'com.mys.www'
 //    artifactId = 'all-utils'
-//    publishVersion = '0.2.6'
+//    publishVersion = '0.2.7'
 //    desc = 'all utils.'
 //    website = 'https://github.com/makai554892700/web-utils/tree/master/all-utils'
 //}
 
-version '0.2.6'
+version '0.2.7'
 archivesBaseName = 'all-utils'
 jar.enabled = true
 bootJar.enabled = false
@@ -25,6 +25,6 @@ dependencies {
     api("com.mys.www:encrypt-utils:0.0.1")
     api("com.mys.www:file-utils:0.0.5")
     api("com.mys.www:net-utils:0.0.6")
-    api("com.mys.www:spring-utils:0.1.2")
+    api("com.mys.www:spring-utils:0.1.4")
 }
 //上传jar包命令： gradlew clean build bintrayUpload -PbintrayUser=PBINTRAY_NAME -PbintrayKey=PBINTRAY_KEY -PdryRun=false
