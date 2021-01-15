@@ -39,20 +39,21 @@ public class StreamUtils {
         return stringBuilder.toString();
     }
 
-    public static boolean inputStream2OutputStream(InputStream inputStream, OutputStream outputStream) {
+    public static int inputStream2OutputStream(InputStream inputStream, OutputStream outputStream) {
         if (inputStream != null && outputStream != null) {
             byte[] tempByte = new byte[1024];
-            int len;
+            int len, allLen = 0;
             try {
                 while ((len = inputStream.read(tempByte)) != -1) {
                     outputStream.write(tempByte, 0, len);
+                    allLen += len;
                 }
-                return true;
+                return allLen;
             } catch (Exception e) {
                 log.log(Level.WARNING, "e=" + 3);
             }
         }
-        return false;
+        return -1;
     }
 
 }

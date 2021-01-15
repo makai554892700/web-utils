@@ -196,7 +196,7 @@ public class FileUtils {
             return null;
         } else {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            if (!StreamUtils.inputStream2OutputStream(inputStream, byteArrayOutputStream)) {
+            if (StreamUtils.inputStream2OutputStream(inputStream, byteArrayOutputStream) < 0) {
                 CloseUtils.closeSilently(byteArrayOutputStream);
                 return null;
             }
@@ -217,7 +217,7 @@ public class FileUtils {
                 log.log(Level.WARNING, "e=" + e);
                 return false;
             }
-            result = StreamUtils.inputStream2OutputStream(inputStream, outputStream);
+            result = StreamUtils.inputStream2OutputStream(inputStream, outputStream) > 0;
             CloseUtils.closeSilently(outputStream);
         }
         return result;
