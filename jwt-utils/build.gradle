@@ -11,12 +11,12 @@
 //    userOrg = 'marking'
 //    groupId = 'com.mys.www'
 //    artifactId = 'jwt-utils'
-//    publishVersion = '0.1.1'
+//    publishVersion = '0.1.2'
 //    desc = 'jwt utils.'
 //    website = 'https://github.com/makai554892700/web-utils/tree/master/jwt-utils'
 //}
 
-version '0.1.1'
+version '0.1.2'
 archivesBaseName = 'jwt-utils'
 jar.enabled = true
 bootJar.enabled = false

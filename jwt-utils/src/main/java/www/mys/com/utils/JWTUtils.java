@@ -47,7 +47,10 @@ public class JWTUtils {
     }
 
     public static String getValueFromToken(String publicKeyStr, String token, String key, boolean checkTime) {
-        Claims claims = commonGetClaims(publicKeyStr, token, checkTime);
+        return getValueFromToken(commonGetClaims(publicKeyStr, token, checkTime), key);
+    }
+
+    public static String getValueFromToken(Claims claims, String key) {
         Object result = claims.get(key);
         if (result == null) {
             return null;
@@ -64,7 +67,7 @@ public class JWTUtils {
         }
     }
 
-    private static Claims commonGetClaims(String publicKeyStr, String token, boolean checkTime) {
+    public static Claims commonGetClaims(String publicKeyStr, String token, boolean checkTime) {
         Claims claims;
         try {
             claims = getClaimsFromToken(publicKeyStr, token);
