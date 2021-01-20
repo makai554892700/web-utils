@@ -11,12 +11,12 @@
 //    userOrg = 'marking'
 //    groupId = 'com.mys.www'
 //    artifactId = 'websocket'
-//    publishVersion = '0.0.1'
+//    publishVersion = '0.0.2'
 //    desc = 'websocket utils.'
 //    website = 'https://github.com/makai554892700/web-utils/tree/master/websocket'
 //}
 
-version '0.0.1'
+version '0.0.2'
 archivesBaseName = 'websocket'
 jar.enabled = true
 bootJar.enabled = false

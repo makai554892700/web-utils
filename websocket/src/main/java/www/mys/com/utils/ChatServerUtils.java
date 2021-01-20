@@ -95,9 +95,9 @@ public class ChatServerUtils {
             ChannelPipeline pipeline = socketChannel.pipeline();
             pipeline.addLast(new HttpServerCodec());
             pipeline.addLast(new ChunkedWriteHandler());
-            pipeline.addLast(new HttpObjectAggregator(1024 * 1024 * 1024));
+            pipeline.addLast(new HttpObjectAggregator(Integer.MAX_VALUE));
             pipeline.addLast(new WebSocketServerProtocolHandler(split, null
-                    , true, 65535));
+                    , true, Integer.MAX_VALUE));
             pipeline.addLast(new BaseSimpleChannelInboundHandler(serverBack));
         }
     }
