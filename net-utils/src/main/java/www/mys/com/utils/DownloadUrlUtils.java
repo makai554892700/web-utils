@@ -1,6 +1,7 @@
 package www.mys.com.utils;
 
 import javax.net.ssl.HttpsURLConnection;
+import java.io.Closeable;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -8,12 +9,13 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DownloadUtils {
-
-    private static final Logger log = Logger.getLogger(DownloadUtils.class.getName());
+public class DownloadUrlUtils {
 
     private static final String HTTPS = "https";
-    private static final String GET = "GET";
+    private static String GET = "GET";
+    private static String POST = "POST";
+
+    private static final Logger log = Logger.getLogger(DownloadUrlUtils.class.getName());
 
     public static UrlResponse url2InputStream(String urlString) {
         return url2InputStream(urlString, null, 5 * 1000);
@@ -29,11 +31,11 @@ public class DownloadUtils {
 
     public static UrlResponse url2InputStream(String urlString, HashMap<String, String> heads, int timeOut) {
         UrlResponse result = null;
-        if (!StringUtils.isEmpty(urlString)) {
-            HttpURLConnection conn = null;
+        if (urlString != null && !urlString.isEmpty()) {
+            HttpURLConnection conn = null; //连接对象
             InputStream inputStream;
             try {
-                URL url = new URL(urlString);
+                URL url = new URL(urlString); //URL对象
                 if (urlString.startsWith(HTTPS)) {
                     HttpUtils.ignoreSsl();
                     conn = (HttpsURLConnection) url.openConnection();
@@ -50,7 +52,7 @@ public class DownloadUtils {
                 }
                 inputStream = conn.getInputStream();
                 String fileName = conn.getHeaderField("Content-Disposition");
-                if (StringUtils.isEmpty(fileName)) {
+                if (fileName == null || fileName.isEmpty()) {
                     String[] tempStr = urlString.split("/");
                     fileName = tempStr[tempStr.length - 1];
                 } else {
@@ -88,7 +90,7 @@ public class DownloadUtils {
 
         public void endOption() {
             if (inputStream != null) {
-                CloseUtils.closeSilently(inputStream);
+                closeSilently(inputStream);
             }
             if (conn != null) {
                 try {
@@ -147,6 +149,16 @@ public class DownloadUtils {
                     ", contentType='" + contentType + '\'' +
                     ", size=" + size +
                     '}';
+        }
+    }
+
+    public static void closeSilently(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (Exception e) {
+                log.log(Level.WARNING, "e=" + e);
+            }
         }
     }
 

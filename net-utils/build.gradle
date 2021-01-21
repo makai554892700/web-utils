@@ -11,12 +11,12 @@
 //    userOrg = 'marking'
 //    groupId = 'com.mys.www'
 //    artifactId = 'net-utils'
-//    publishVersion = '0.0.6'
+//    publishVersion = '0.0.7'
 //    desc = 'net utils.'
 //    website = 'https://github.com/makai554892700/web-utils/tree/master/net-utils'
 //}
 
-version '0.0.6'
+version '0.0.7'
 archivesBaseName = 'net-utils'
 jar.enabled = true
 bootJar.enabled = false
