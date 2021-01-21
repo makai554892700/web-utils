@@ -1,6 +1,7 @@
 package www.mys.com.utils;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -9,6 +10,7 @@ import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
 
+import java.io.OutputStream;
 import java.net.URI;
 import java.util.logging.Logger;
 
@@ -23,7 +25,7 @@ public class ChatClientUtils {
 
     public SendBack sendText(String message) {
         if (message == null) {
-            return new SendBack(-1, "baseChatPOJO is null.", null);
+            return new SendBack(-1, "message is null.", null);
         }
         if (channel == null) {
             return new SendBack(-2, "user not connect.", null);
@@ -32,7 +34,6 @@ public class ChatClientUtils {
         ChatUtils.sendData(channel
                 , message.getBytes()
                 , future -> {
-                    log.info("operationComplete future=" + future);
                     log.info("operationComplete isDone=" + future.isDone());
                     if (future.isDone()) {
                         result.append(ChatUtils.SUCCESS);
@@ -61,7 +62,8 @@ public class ChatClientUtils {
         }
 
         private void onBinaryBack(BinaryWebSocketFrame binaryFrame) {
-            log.info("onBinaryBack" + new String(binaryFrame.content().array()));
+            byte[] data = readBytes(binaryFrame.content());
+            log.info("onBinaryBack" + (data == null ? "null" : new String(data)));
         }
 
         @Override
@@ -199,6 +201,22 @@ public class ChatClientUtils {
             log.info("ChatClient2Utils init error.e=" + e);
             eventLoopGroup.shutdownGracefully();
             running = false;
+        }
+    }
+
+    public static byte[] readBytes(ByteBuf data) {
+        if (data == null) {
+            return null;
+        }
+        byte[] result = new byte[data.readableBytes()];
+        int readerIndex = data.readerIndex();
+        data.getBytes(readerIndex, result);
+        return result;
+    }
+
+    public static void byteBuf2File(ByteBuf data, OutputStream outputStream) throws Exception {
+        while (data.isReadable()) {
+            outputStream.write(data.readByte());
         }
     }
 

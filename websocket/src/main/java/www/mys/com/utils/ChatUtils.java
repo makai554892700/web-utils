@@ -6,6 +6,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.logging.Logger;
 
