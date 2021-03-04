@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ResponsePage<T> implements Serializable {
@@ -22,6 +23,48 @@ public class ResponsePage<T> implements Serializable {
     private boolean empty;
 
     public ResponsePage() {
+    }
+
+    public ResponsePage(List<T> datas, Pageable pageable) {
+        boolean isEmpty = datas == null || datas.isEmpty();
+        int length = isEmpty ? 0 : datas.size();
+        int totalPages = isEmpty ? 0 : length / pageable.getPageSize();
+        int number = isEmpty ? 0 : pageable.getPageNumber();
+        int size = isEmpty ? 0 : pageable.getPageSize();
+        int numberOfElements = number;
+        boolean isFirst = number == 0;
+        boolean isLast = totalElements <= size;
+        List<T> content = new ArrayList<>();
+        if (!isEmpty) {
+            for (int i = number * size; i < (number + 1) * size; i++) {
+                if (i < datas.size()) {
+                    content.add(datas.get(i));
+                }
+            }
+        }
+        setContent(content);
+        Sort sort = pageable.getSort();
+        ResponsePage.ResponseSort responseSort = new ResponsePage.ResponseSort();
+        responseSort.setSorted(sort.isSorted());
+        responseSort.setEmpty(sort.isEmpty());
+        responseSort.setUnsorted(sort.isUnsorted());
+        setSort(responseSort);
+        ResponsePage.ResponsePageable responsePageable = new ResponsePage.ResponsePageable();
+        responsePageable.setSort(responseSort);
+        responsePageable.setOffset(pageable.getOffset());
+        responsePageable.setPageSize(pageable.getPageSize());
+        responsePageable.setPageNumber(pageable.getPageNumber());
+        responsePageable.setPaged(pageable.isPaged());
+        responsePageable.setUnpaged(pageable.isUnpaged());
+        setPageable(responsePageable);
+        setTotalElements(length);
+        setLast(isLast);
+        setTotalPages(totalPages);
+        setNumber(number);
+        setSize(size);
+        setNumberOfElements(numberOfElements);
+        setFirst(isFirst);
+        setEmpty(isEmpty);
     }
 
     public ResponsePage(Page<T> page) {
