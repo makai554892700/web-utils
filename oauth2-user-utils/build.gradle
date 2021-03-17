@@ -11,19 +11,26 @@
 //    userOrg = 'marking'
 //    groupId = 'com.mys.www'
 //    artifactId = 'oauth2-user-utils'
-//    publishVersion = '0.0.3'
+//    publishVersion = '0.0.4'
 //    desc = 'oauth2 user utils.'
 //    website = 'https://github.com/makai554892700/web-utils'
 //}
 
-version '0.0.3'
+version '0.0.4'
 archivesBaseName = 'oauth2-user-utils'
 jar.enabled = true
 bootJar.enabled = false
 dependencies {
-    compileOnly("com.mys.www:base-utils:0.0.2")
+    compileOnly("com.mys.www:base-utils:0.0.3")
     compileOnly("javax.validation:validation-api:2.0.1.Final")
     compileOnly("mysql:mysql-connector-java")
     compileOnly("org.springframework.boot:spring-boot-starter-data-jpa")
+}
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+tasks.withType(Javadoc) {
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
 }
 //上传jar包命令： gradlew clean build bintrayUpload -PbintrayUser=PBINTRAY_NAME -PbintrayKey=PBINTRAY_KEY -PdryRun=false

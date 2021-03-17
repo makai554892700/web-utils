@@ -11,17 +11,21 @@
 //    userOrg = 'marking'
 //    groupId = 'com.mys.www'
 //    artifactId = 'base-utils'
-//    publishVersion = '0.0.2'
+//    publishVersion = '0.0.3'
 //    desc = 'base utils.'
 //    website = 'https://github.com/makai554892700/web-utils/tree/master/base-utils'
 //}
 
-version '0.0.2'
+version '0.0.3'
 archivesBaseName = 'base-utils'
 jar.enabled = true
 bootJar.enabled = false
 dependencies {}
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
+}
+tasks.withType(Javadoc) {
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
 }
 //上传jar包命令： gradlew clean build bintrayUpload -PbintrayUser=PBINTRAY_NAME -PbintrayKey=PBINTRAY_KEY -PdryRun=false

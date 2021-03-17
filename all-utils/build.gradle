@@ -11,17 +11,17 @@
 //    userOrg = 'marking'
 //    groupId = 'com.mys.www'
 //    artifactId = 'all-utils'
-//    publishVersion = '0.3.0'
+//    publishVersion = '0.3.1'
 //    desc = 'all utils.'
 //    website = 'https://github.com/makai554892700/web-utils/tree/master/all-utils'
 //}
 
-version '0.3.0'
+version '0.3.1'
 archivesBaseName = 'all-utils'
 jar.enabled = true
 bootJar.enabled = false
 dependencies {
-    api("com.mys.www:base-utils:0.0.2")
+    api("com.mys.www:base-utils:0.0.3")
     api("com.mys.www:encrypt-utils:0.0.1")
     api("com.mys.www:file-utils:0.0.6")
     api("com.mys.www:net-utils:0.0.7")
