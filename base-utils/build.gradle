@@ -11,12 +11,12 @@
 //    userOrg = 'marking'
 //    groupId = 'com.mys.www'
 //    artifactId = 'base-utils'
-//    publishVersion = '0.0.5'
+//    publishVersion = '0.0.6'
 //    desc = 'base utils.'
 //    website = 'https://github.com/makai554892700/web-utils/tree/master/base-utils'
 //}
 
-version '0.0.5'
+version '0.0.6'
 archivesBaseName = 'base-utils'
 jar.enabled = true
 bootJar.enabled = false

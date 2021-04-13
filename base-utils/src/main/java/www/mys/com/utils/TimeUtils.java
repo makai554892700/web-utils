@@ -53,10 +53,17 @@ public class TimeUtils {
     }
 
     public static Date getDateByStr(String str, TimeEnum timeEnum) {
-        if (str == null || timeEnum == null) {
+        if (timeEnum == null) {
             return null;
         }
-        SimpleDateFormat sdf = new SimpleDateFormat(timeEnum.getStr());
+        return getDateByStr(str, timeEnum.getStr());
+    }
+
+    public static Date getDateByStr(String str, String simpleDateFormat) {
+        if (str == null || simpleDateFormat == null || simpleDateFormat.isEmpty()) {
+            return null;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(simpleDateFormat);
         try {
             return sdf.parse(str);
         } catch (Exception e) {
@@ -106,6 +113,13 @@ public class TimeUtils {
     }
 
     public static String getTimeZoneDateString(Date date, float timeZoneOffset, TimeEnum timeEnum) {
+        return getTimeZoneDateString(date, timeZoneOffset, timeEnum.getStr());
+    }
+
+    public static String getTimeZoneDateString(Date date, float timeZoneOffset, String simpleDateFormat) {
+        if (date == null || simpleDateFormat == null || simpleDateFormat.isEmpty()) {
+            return null;
+        }
         if (timeZoneOffset > 13 || timeZoneOffset < -12) {
             timeZoneOffset = 0;
         }
@@ -117,7 +131,7 @@ public class TimeUtils {
         } else {
             timeZone = new SimpleTimeZone(newTime, ids[0]);
         }
-        SimpleDateFormat sdf = new SimpleDateFormat(timeEnum.getStr());
+        SimpleDateFormat sdf = new SimpleDateFormat(simpleDateFormat);
         sdf.setTimeZone(timeZone);
         return sdf.format(date);
     }
