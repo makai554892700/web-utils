@@ -1,36 +1,70 @@
-//apply plugin: 'com.novoda.bintray-release'
-//buildscript {
-//    repositories {
-//        jcenter()
-//    }
-//    dependencies {
-//        classpath 'com.novoda:bintray-release:0.9.2'
-//    }
-//}
-//publish {
-//    userOrg = 'marking'
-//    groupId = 'com.mys.www'
-//    artifactId = 'oauth2-user-utils'
-//    publishVersion = '0.0.6'
-//    desc = 'oauth2 user utils.'
-//    website = 'https://github.com/makai554892700/web-utils'
-//}
-
-version '0.0.6'
+group 'com.woaizhuangbi'
+//version '0.0.1-RELEASE'
+version '0.0.1-SNAPSHOT'
 archivesBaseName = 'oauth2-user-utils'
 jar.enabled = true
 bootJar.enabled = false
 dependencies {
-    compileOnly("com.mys.www:base-utils:0.0.6")
+    compileOnly("com.woaizhuangbi:base-utils:0.0.1-SNAPSHOT")
     compileOnly("javax.validation:validation-api:2.0.1.Final")
     compileOnly("mysql:mysql-connector-java")
     compileOnly("org.springframework.boot:spring-boot-starter-data-jpa")
 }
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
 }
-tasks.withType(Javadoc) {
-    options.addStringOption('encoding', 'UTF-8')
-    options.addStringOption('charSet', 'UTF-8')
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
 }
-//上传jar包命令： gradlew clean build bintrayUpload -PbintrayUser=PBINTRAY_NAME -PbintrayKey=PBINTRAY_KEY -PdryRun=false
+artifacts {
+    archives javadocJar, sourcesJar
+}
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'Oauth2UserUtils'
+                packaging 'jar'
+                description 'A oauth2-user utils'
+                url 'https://github.com/makai554892700/web-utils/tree/master/oauth2-user-utils'
+                scm {
+                    connection 'scm:git@github.com:makai554892700/web-utils.git'
+                    developerConnection 'scm:git@github.com:makai554892700/web-utils.git'
+                    url 'https://github.com/makai554892700/web-utils.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'makai'
+                        name 'makai'
+                        email 'makai554892700@sina.com'
+                    }
+                }
+            }
+        }
+    }
+}
+signing {
+    sign configurations.archives
+}
+// gradle oauth2-user-utils:uploadArchives
