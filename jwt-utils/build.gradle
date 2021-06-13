@@ -1,6 +1,6 @@
 group 'com.woaizhuangbi'
-//version '0.0.1-RELEASE'
-version '0.0.1-SNAPSHOT'
+version '0.0.2-RELEASE'
+//version '0.0.1-SNAPSHOT'
 archivesBaseName = 'jwt-utils'
 jar.enabled = true
 bootJar.enabled = false
@@ -13,8 +13,8 @@ dependencies {
     compileOnly("javax.validation:validation-api:2.0.1.Final")
     // swagger3 依赖
     compileOnly("io.springfox:springfox-boot-starter:3.0.0")
-    api("com.woaizhuangbi:encrypt-utils:0.0.1-SNAPSHOT")
-    api("com.woaizhuangbi:spring-utils:0.0.1-SNAPSHOT")
+    api("com.woaizhuangbi:encrypt-utils:0.0.1-RELEASE")
+    api("com.woaizhuangbi:spring-utils:0.0.1-RELEASE")
 }
 
 task sourcesJar(type: Jar) {

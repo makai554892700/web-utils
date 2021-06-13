@@ -1,11 +1,11 @@
 group 'com.woaizhuangbi'
-//version '0.0.1-RELEASE'
-version '0.0.1-SNAPSHOT'
+version '0.0.2-RELEASE'
+//version '0.0.1-SNAPSHOT'
 archivesBaseName = 'oauth2-user-utils'
 jar.enabled = true
 bootJar.enabled = false
 dependencies {
-    compileOnly("com.woaizhuangbi:base-utils:0.0.1-SNAPSHOT")
+    compileOnly("com.woaizhuangbi:base-utils:0.0.1-RELEASE")
     compileOnly("javax.validation:validation-api:2.0.1.Final")
     compileOnly("mysql:mysql-connector-java")
     compileOnly("org.springframework.boot:spring-boot-starter-data-jpa")
