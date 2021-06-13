@@ -26,7 +26,7 @@ public class ResultUtils {
         if (response == null) {
             return null;
         }
-        if (response.getCode() != ResultUtils.SUCCESS_CODE) {
+        if (!response.getCode().equals(ResultUtils.SUCCESS_CODE)) {
             throw new BaseException(response.getMessage(), response.getCode());
         } else {
             return response.getData();
