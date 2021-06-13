@@ -19,6 +19,12 @@ public class MinioUtils {
 
     private static final Logger log = LoggerFactory.getLogger(MinioUtils.class);
 
+    private static long maxAge = -1;
+
+    public static void setMaxAge(long maxAge) {
+        MinioUtils.maxAge = maxAge;
+    }
+
     public static boolean uploadFile(String host, String accessKey, String secretKey, String bucketName
             , MultipartFile file, String fileName) {
         log.info("uploadFile host=" + host + ";accessKey=" + accessKey + ";secretKey=" + secretKey
@@ -68,7 +74,7 @@ public class MinioUtils {
             }
             ObjectStat objectStat = minioClient.statObject(bucketName, objectName);
             return DownloadUtils.downloadFile(request, response, minioClient.getObject(bucketName, objectName)
-                    , objectStat.name(), objectStat.length(), objectStat.contentType(), true, -1);
+                    , objectStat.name(), objectStat.length(), objectStat.contentType(), true, maxAge);
         } catch (Exception e) {
             log.info("downloadFile error: " + e);
         }

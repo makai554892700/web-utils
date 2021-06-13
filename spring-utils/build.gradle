@@ -1,5 +1,5 @@
 group 'com.woaizhuangbi'
-version '0.0.21RELEASE'
+version '0.0.3-RELEASE'
 archivesBaseName = 'spring-utils'
 jar.enabled = true
 bootJar.enabled = false

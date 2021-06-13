@@ -12,4 +12,5 @@ include 'oauth2-user-utils'
 include 'websocket'
 include 'minio-utils'
 include 'file-interface'
+include 'file-local'
 

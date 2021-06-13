@@ -1,13 +1,16 @@
 group 'com.woaizhuangbi'
-version '0.0.3-RELEASE'
-archivesBaseName = 'minio-utils'
+version '0.0.1-RELEASE'
+archivesBaseName = 'file-local'
 jar.enabled = true
 bootJar.enabled = false
 dependencies {
-    compileOnly("com.woaizhuangbi:spring-utils:0.0.1-RELEASE")
+    compileOnly("com.woaizhuangbi:spring-utils:0.0.3-RELEASE")
+    compileOnly("com.woaizhuangbi:file-utils:0.0.1-RELEASE")
+    compileOnly("com.woaizhuangbi:encrypt-utils:0.0.1-RELEASE")
     compileOnly("com.woaizhuangbi:file-interface:0.0.1-RELEASE")
     compileOnly("org.springframework.boot:spring-boot-starter-web")
-    implementation("io.minio:minio:3.0.10")
+    api("org.projectlombok:lombok:1.18.8")
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
 }
 
 task sourcesJar(type: Jar) {
@@ -35,10 +38,10 @@ uploadArchives {
             }
 
             pom.project {
-                name 'minio-utils'
+                name 'file-local'
                 packaging 'jar'
-                description 'A minio utils'
-                url 'https://github.com/makai554892700/web-utils/tree/master/minio-utils'
+                description 'A local file utils'
+                url 'https://github.com/makai554892700/web-utils/tree/master/file-local'
                 scm {
                     connection 'scm:git@github.com:makai554892700/web-utils.git'
                     developerConnection 'scm:git@github.com:makai554892700/web-utils.git'
@@ -66,4 +69,4 @@ uploadArchives {
 signing {
     sign configurations.archives
 }
-// gradle minio-utils:uploadArchives
+// gradle file-local:uploadArchives
