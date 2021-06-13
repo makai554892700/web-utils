@@ -1,10 +1,11 @@
 group 'com.woaizhuangbi'
-version '0.0.1-RELEASE'
+version '0.0.2-RELEASE'
 archivesBaseName = 'minio-utils'
 jar.enabled = true
 bootJar.enabled = false
 dependencies {
     compileOnly("com.woaizhuangbi:spring-utils:0.0.1-RELEASE")
+    compileOnly("com.woaizhuangbi:file-interface:0.0.1-RELEASE")
     compileOnly("org.springframework.boot:spring-boot-starter-web")
     implementation("io.minio:minio:3.0.10")
 }

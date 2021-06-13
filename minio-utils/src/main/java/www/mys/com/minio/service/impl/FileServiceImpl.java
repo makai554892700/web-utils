@@ -3,8 +3,8 @@ package www.mys.com.minio.service.impl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import www.mys.com.minio.base.MYSFileInfo;
-import www.mys.com.minio.service.FileService;
+import www.mys.com.file.base.MYSFileInfo;
+import www.mys.com.file.service.FileService;
 import www.mys.com.minio.utils.MinioUtils;
 import www.mys.com.utils.BaseException;
 

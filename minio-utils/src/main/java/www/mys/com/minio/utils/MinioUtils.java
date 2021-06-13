@@ -5,8 +5,8 @@ import io.minio.ObjectStat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
-import www.mys.com.minio.base.MYSFileInfo;
 import www.mys.com.utils.DownloadUtils;
+import www.mys.com.file.base.MYSFileInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
