@@ -1,6 +1,5 @@
 group 'com.woaizhuangbi'
 version '0.0.1-RELEASE'
-//version '0.0.1-SNAPSHOT'
 archivesBaseName = 'oauth2-utils'
 jar.enabled = true
 bootJar.enabled = false

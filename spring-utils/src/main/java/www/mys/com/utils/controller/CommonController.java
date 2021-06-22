@@ -1,10 +1,9 @@
 package www.mys.com.utils.controller;
 
 import io.swagger.annotations.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import www.mys.com.utils.Result;
-import www.mys.com.utils.ResultUtils;
 import www.mys.com.utils.api.CommonApi;
 import www.mys.com.utils.service.CommonService;
 import www.mys.com.utils.vo.response.ResponsePage;
@@ -17,11 +16,11 @@ public abstract class CommonController<Req, Res, V> implements CommonApi<Req, Re
 
     @ApiOperation("upload data.")
     @PostMapping(value = "/data")
-    public Result<Res> uploadData(@RequestBody @Valid Req data, BindingResult bindingResult) throws Exception {
+    public ResponseEntity<Res> uploadData(@RequestBody @Valid Req data, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             throw new Exception(bindingResult.getFieldError().getDefaultMessage());
         }
-        return ResultUtils.succeed(getCommonService().uploadData(data));
+        return ResponseEntity.ok(getCommonService().uploadData(data));
     }
 
     @ApiOperation("get data by id.")
@@ -29,8 +28,8 @@ public abstract class CommonController<Req, Res, V> implements CommonApi<Req, Re
             @ApiImplicitParam(paramType = "path", name = "id", dataTypeClass = Long.class)
     })
     @GetMapping(value = "/data/{id}")
-    public Result<Res> getData(@PathVariable("id") V id) {
-        return ResultUtils.succeed(getCommonService().getData(id));
+    public ResponseEntity<Res> getData(@PathVariable("id") V id) {
+        return ResponseEntity.ok(getCommonService().getData(id));
     }
 
     @ApiOperation("get page data.")
@@ -39,9 +38,9 @@ public abstract class CommonController<Req, Res, V> implements CommonApi<Req, Re
             @ApiImplicitParam(name = "count", value = "count", dataTypeClass = Integer.class),
     })
     @GetMapping(value = "/datas")
-    public Result<ResponsePage<Res>> getDatas(@RequestParam(required = false, defaultValue = "0") Integer page
+    public ResponseEntity<ResponsePage<Res>> getDatas(@RequestParam(required = false, defaultValue = "0") Integer page
             , @RequestParam(required = false, defaultValue = "10") Integer count) {
-        return ResultUtils.succeed(getCommonService().getDatas(page, count));
+        return ResponseEntity.ok(getCommonService().getDatas(page, count));
     }
 
     @ApiOperation("update data by id.")
@@ -49,8 +48,8 @@ public abstract class CommonController<Req, Res, V> implements CommonApi<Req, Re
             @ApiImplicitParam(name = "id", value = "id", dataTypeClass = Long.class),
     })
     @PutMapping(value = "/updateData/{id}")
-    public Result<Res> updateData(@PathVariable("id") V id, @RequestBody Req data) {
-        return ResultUtils.succeed(getCommonService().updateData(id, data));
+    public ResponseEntity<Res> updateData(@PathVariable("id") V id, @RequestBody Req data) {
+        return ResponseEntity.ok(getCommonService().updateData(id, data));
     }
 
     @ApiOperation("delete data by id.")
@@ -58,8 +57,8 @@ public abstract class CommonController<Req, Res, V> implements CommonApi<Req, Re
             @ApiImplicitParam(name = "id", value = "id", dataTypeClass = Long.class),
     })
     @DeleteMapping(value = "/data/{id}")
-    public Result<V> deleteData(@PathVariable("id") V id) {
-        return ResultUtils.succeed(getCommonService().deleteData(id));
+    public ResponseEntity<V> deleteData(@PathVariable("id") V id) {
+        return ResponseEntity.ok(getCommonService().deleteData(id));
     }
 
 }
