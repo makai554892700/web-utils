@@ -17,6 +17,10 @@ public class Result<T> implements Serializable {
         this.data = data;
     }
 
+    public static <T> Result<T> success(){
+        return new Result<T>();
+    }
+
     public Integer getCode() {
         return code;
     }
