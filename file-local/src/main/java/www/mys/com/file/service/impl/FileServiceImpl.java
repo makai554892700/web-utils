@@ -45,7 +45,7 @@ public class FileServiceImpl implements FileService {
         Name name = getNameByFileName(fileName);
         File realFile = FileUtils.sureFileIsNew(name.realPath);
         if (!FileUtils.inputStream2File(inputStream, realFile)) {
-            throw new BaseException("upload file error.", -1);
+            throw new Exception("upload file error.");
         }
         return transName2MYSFileInfo(name);
     }
@@ -86,8 +86,9 @@ public class FileServiceImpl implements FileService {
             DownloadUtils.downloadFile(request, response, new FileInputStream(name.realPath), name.fileName
                     , new File(name.realPath).length(), new MimetypesFileTypeMap().getContentType(name.fileName)
                     , true, maxAge);
+        } else {
+            throw new Exception("file not exist.");
         }
-        DownloadUtils.returnMessage(request, response, "file not exist.", true, -1);
     }
 
     public static Name getNameById(String id) {
