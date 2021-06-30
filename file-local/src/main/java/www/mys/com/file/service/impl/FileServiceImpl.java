@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 import www.mys.com.file.base.MYSFileInfo;
 import www.mys.com.file.service.FileService;
 import www.mys.com.file.utils.PathUtils;
-import www.mys.com.utils.BaseException;
 import www.mys.com.utils.DownloadUtils;
 import www.mys.com.utils.FileUtils;
 import www.mys.com.utils.MD5Utils;
@@ -100,9 +99,9 @@ public class FileServiceImpl implements FileService {
         result.shortName = id.substring(0, 16);
         result.start = id.substring(0, 4);
         result.end = id.substring(28, 32);
-        String startPath = tempPath + File.pathSeparator + result.start;
+        String startPath = tempPath + File.separatorChar + result.start;
         FileUtils.sureDir(startPath);
-        String endPath = startPath + File.pathSeparator + result.end;
+        String endPath = startPath + File.separatorChar + result.end;
         FileUtils.sureDir(endPath);
         StringBuilder resultFileName = new StringBuilder();
         FileUtils.listDir(endPath, new FileUtils.DirBack() {
@@ -128,7 +127,7 @@ public class FileServiceImpl implements FileService {
             return null;
         }
         result.fileName = resultFileName.toString();
-        result.realPath = endPath + File.pathSeparator + resultFileName;
+        result.realPath = endPath + File.separatorChar + resultFileName;
         return result;
     }
 
@@ -140,11 +139,11 @@ public class FileServiceImpl implements FileService {
         result.shortName = data.substring(0, 16);
         result.start = data.substring(0, 2);
         result.end = data.substring(30, 32);
-        String startPath = tempPath + File.pathSeparator + result.start;
+        String startPath = tempPath + File.separatorChar + result.start;
         FileUtils.sureDir(startPath);
-        String endPath = startPath + File.pathSeparator + result.end;
+        String endPath = startPath + File.separatorChar + result.end;
         FileUtils.sureDir(endPath);
-        result.realPath = endPath + File.pathSeparator + fileName;
+        result.realPath = endPath + File.separatorChar + fileName;
         return result;
     }
 
