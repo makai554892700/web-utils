@@ -107,14 +107,14 @@ public class FileServiceImpl implements FileService {
         FileUtils.listDir(endPath, new FileUtils.DirBack() {
             @Override
             public void onStart(String fileName) {
-                if (resultFileName.length() == 0 && id.equals(MD5Utils.MD5(fileName, false))) {
-                    resultFileName.append(fileName);
-                }
             }
 
             @Override
             public void onDir(String line) {
-
+                String fileName = line.substring(line.lastIndexOf(File.separatorChar) + 1);
+                if (resultFileName.length() == 0 && id.equals(MD5Utils.MD5(fileName, false))) {
+                    resultFileName.append(fileName);
+                }
             }
 
             @Override

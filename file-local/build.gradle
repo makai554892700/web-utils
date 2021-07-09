@@ -1,5 +1,5 @@
 group 'com.woaizhuangbi'
-version '1.0.3-RELEASE'
+version '1.0.4-RELEASE'
 archivesBaseName = 'file-local'
 jar.enabled = true
 bootJar.enabled = false
