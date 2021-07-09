@@ -137,8 +137,8 @@ public class FileServiceImpl implements FileService {
         String data = MD5Utils.MD5(fileName, false);
         result.longName = data;
         result.shortName = data.substring(0, 16);
-        result.start = data.substring(0, 2);
-        result.end = data.substring(30, 32);
+        result.start = data.substring(0, 4);
+        result.end = data.substring(28, 32);
         String startPath = tempPath + File.separatorChar + result.start;
         FileUtils.sureDir(startPath);
         String endPath = startPath + File.separatorChar + result.end;
