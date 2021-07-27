@@ -61,7 +61,7 @@ public class FileUtils {
     private static byte[] deByte(byte[] data, int len, String key) {
         byte[] result = new byte[len];
         for (int i = 0; i < len; i++) {
-            result[i] = (byte) (data[i] | (byte) key.charAt(i));
+            result[i] = (byte) (data[i] ^ key.charAt(i));
         }
         return result;
     }
