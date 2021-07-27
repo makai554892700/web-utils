@@ -1,14 +1,63 @@
 package www.mys.com.utils;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FileUtils {
 
     private static final Logger log = Logger.getLogger(FileUtils.class.getName());
+
+    public static boolean transDE(String deFilePath, String resultFilePath, String key) {
+        if (key == null || key.length() != 256) {
+            return false;
+        }
+        File deFile = new File(deFilePath);
+        if (!deFile.exists()) {
+            return false;
+        }
+        File resultFile = sureFileIsNew(resultFilePath);
+        if (resultFile == null) {
+            return false;
+        }
+        final FileOutputStream fileOutputStream;
+        try {
+            fileOutputStream = new FileOutputStream(resultFilePath);
+        } catch (Exception e) {
+            return false;
+        }
+        final StringBuilder error = new StringBuilder();
+        readByte(deFilePath, new ByteBack() {
+            private byte[] tempByte;
+
+            @Override
+            public void onStart(String fileName) {
+            }
+
+            @Override
+            public void onByte(byte[] data, int len) {
+                try {
+                    tempByte = deByte(data, len, key);
+                    fileOutputStream.write(tempByte, 0, len);
+                } catch (Exception e) {
+                    error.append("-");
+                }
+            }
+
+            @Override
+            public void onEnd(String fileName) {
+            }
+        }, 256);
+        return error.length() == 0;
+    }
+
+    private static byte[] deByte(byte[] data, int len, String key) {
+        byte[] result = new byte[len];
+        for (int i = 0; i < len; i++) {
+            result[i] = (byte) (data[i] | (byte) key.charAt(i));
+        }
+        return result;
+    }
 
     public static File sureDir(String dir) {
         log.log(Level.WARNING, "sure dir = " + dir);
@@ -227,6 +276,30 @@ public class FileUtils {
         return readLine(is, lineBack, false);
     }
 
+    public static boolean readByte(InputStream inputStream, ByteBack byteBack, boolean close, int len) {
+        if (byteBack == null) {
+            if (close) {
+                CloseUtils.closeSilently(inputStream);
+            }
+            return false;
+        }
+        byte[] tempByte = new byte[len];
+        int length;
+        try {
+            while ((length = inputStream.read(tempByte)) != -1) {
+                byteBack.onByte(tempByte, length);
+            }
+        } catch (Exception e) {
+            log.log(Level.WARNING, "ready byte error.e==" + e + ";byteBack=" + byteBack);
+            return false;
+        } finally {
+            if (close) {
+                CloseUtils.closeSilently(inputStream);
+            }
+        }
+        return true;
+    }
+
     public static boolean readLine(InputStream inputStream, LineBack lineBack, boolean close) {
         if (lineBack == null) {
             if (close) {
@@ -253,6 +326,29 @@ public class FileUtils {
             lineBack.onEnd(null);
         }
         return true;
+    }
+
+    public static boolean readByte(String filePath, ByteBack byteBack, int len) {
+        boolean result = false;
+        if (byteBack != null && filePath != null && !filePath.isEmpty()) {
+            byteBack.onStart(filePath);
+            File file = new File(filePath);
+            if (file.exists()) {
+                InputStream inputStream;
+                try {
+                    inputStream = new FileInputStream(file);
+                } catch (Exception e) {
+                    byteBack.onEnd(filePath);
+                    log.log(Level.WARNING, "new fileInputStream error;filePath=" + filePath + ";byteBack=" + byteBack);
+                    return false;
+                }
+                result = readByte(inputStream, byteBack, true, len);
+            }
+            byteBack.onEnd(filePath);
+        } else {
+            log.log(Level.WARNING, "filePath is null or byteBack is null;filePath=" + filePath + ";byteBack=" + byteBack);
+        }
+        return result;
     }
 
     public static boolean readLine(String filePath, LineBack lineBack) {
@@ -304,6 +400,14 @@ public class FileUtils {
         public void onStart(String fileName);
 
         public void onDir(String line);
+
+        public void onEnd(String fileName);
+    }
+
+    public interface ByteBack {
+        public void onStart(String fileName);
+
+        public void onByte(byte[] data, int len);
 
         public void onEnd(String fileName);
     }
