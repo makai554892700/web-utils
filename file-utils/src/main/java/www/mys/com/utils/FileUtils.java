@@ -8,12 +8,8 @@ public class FileUtils {
 
     private static final Logger log = Logger.getLogger(FileUtils.class.getName());
 
-    public static boolean transDE(String deFilePath, String resultFilePath, String key) {
+    public static boolean transDE(InputStream deFileStream, String resultFilePath, String key) {
         if (key == null || key.length() != 256) {
-            return false;
-        }
-        File deFile = new File(deFilePath);
-        if (!deFile.exists()) {
             return false;
         }
         File resultFile = sureFileIsNew(resultFilePath);
@@ -27,7 +23,7 @@ public class FileUtils {
             return false;
         }
         final StringBuilder error = new StringBuilder();
-        readByte(deFilePath, new ByteBack() {
+        readByte(deFileStream, new ByteBack() {
             private byte[] tempByte;
 
             @Override
@@ -47,8 +43,19 @@ public class FileUtils {
             @Override
             public void onEnd(String fileName) {
             }
-        }, 256);
+        }, true, 256);
         return error.length() == 0;
+
+    }
+
+    public static boolean transDE(String deFilePath, String resultFilePath, String key) {
+        InputStream inputStream;
+        try {
+            inputStream = new FileInputStream(deFilePath);
+        } catch (Exception e) {
+            return false;
+        }
+        return transDE(inputStream, resultFilePath, key);
     }
 
     private static byte[] deByte(byte[] data, int len, String key) {
