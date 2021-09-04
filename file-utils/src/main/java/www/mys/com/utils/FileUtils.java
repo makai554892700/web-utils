@@ -43,7 +43,7 @@ public class FileUtils {
             @Override
             public void onEnd(String fileName) {
             }
-        }, true, 256);
+        }, true, 25600);
         return error.length() == 0;
 
     }
