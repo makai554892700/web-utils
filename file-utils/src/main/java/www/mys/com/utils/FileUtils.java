@@ -9,6 +9,10 @@ public class FileUtils {
     private static final Logger log = Logger.getLogger(FileUtils.class.getName());
 
     public static boolean transDE(InputStream deFileStream, String resultFilePath, String key) {
+        return transDE(deFileStream, resultFilePath, key, 2560);
+    }
+
+    public static boolean transDE(InputStream deFileStream, String resultFilePath, String key, int leng) {
         if (key == null || key.length() != 256) {
             return false;
         }
@@ -43,19 +47,23 @@ public class FileUtils {
             @Override
             public void onEnd(String fileName) {
             }
-        }, true, 25600);
+        }, true, leng);
         return error.length() == 0;
 
     }
 
     public static boolean transDE(String deFilePath, String resultFilePath, String key) {
+        return transDE(deFilePath, resultFilePath, key, 2560);
+    }
+
+    public static boolean transDE(String deFilePath, String resultFilePath, String key, int leng) {
         InputStream inputStream;
         try {
             inputStream = new FileInputStream(deFilePath);
         } catch (Exception e) {
             return false;
         }
-        return transDE(inputStream, resultFilePath, key);
+        return transDE(inputStream, resultFilePath, key, leng);
     }
 
     private static byte[] deByte(byte[] data, int len, String key) {
