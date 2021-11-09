@@ -6,65 +6,64 @@ bootJar.enabled = false
 dependencies {
     api("com.woaizhuangbi:base-utils:0.0.1-RELEASE")
     api("com.woaizhuangbi:encrypt-utils:0.0.1-RELEASE")
-    api("com.woaizhuangbi:file-utils:0.0.1-RELEASE")
+    api('com.woaizhuangbi:file-utils:0.0.7-RELEASE')
     api("com.woaizhuangbi:net-utils:0.0.1-RELEASE")
-    api("com.woaizhuangbi:spring-utils:1.0.0-RELEASE")
+    api('com.woaizhuangbi:spring-utils:1.0.1-RELEASE')
 }
-
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
     from sourceSets.main.allJava
+    classifier = 'sources'
 }
 task javadocJar(type: Jar) {
+    from javadoc
     classifier = 'javadoc'
-    from javadoc.destinationDir
 }
-artifacts {
-    archives javadocJar, sourcesJar
-}
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            pom.project {
-                name 'all-utils'
-                packaging 'jar'
-                description 'All web utils'
-                url 'https://github.com/makai554892700/web-utils/tree/master/all-utils'
-                scm {
-                    connection 'scm:git@github.com:makai554892700/web-utils.git'
-                    developerConnection 'scm:git@github.com:makai554892700/web-utils.git'
-                    url 'https://github.com/makai554892700/web-utils.git'
-                }
-
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                name = 'all-utils'
+                packaging = 'jar'
+                description = 'All web utils'
+                url = 'https://github.com/makai554892700/web-utils/tree/master/all-utils'
                 licenses {
                     license {
-                        name 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
-
                 developers {
                     developer {
-                        id 'makai'
-                        name 'makai'
-                        email 'makai554892700@sina.com'
+                        id = 'makai'
+                        name = 'makai'
+                        email = 'makai554892700@sina.com'
                     }
                 }
+                scm {
+                    connection = 'scm:git@github.com:makai554892700/web-utils.git'
+                    developerConnection = 'scm:git@github.com:makai554892700/web-utils.git'
+                    url = 'https://github.com/makai554892700/web-utils.git'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
             }
         }
     }
 }
 signing {
-    sign configurations.archives
+    sign publishing.publications.mavenJava
 }
-// gradle all-utils:uploadArchives
+javadoc {
+    options.addStringOption("charset", "UTF-8")
+}
+// gradle all-utils:publish

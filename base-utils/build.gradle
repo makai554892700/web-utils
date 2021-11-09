@@ -4,61 +4,60 @@ archivesBaseName = 'base-utils'
 jar.enabled = true
 bootJar.enabled = false
 dependencies {}
-
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
     from sourceSets.main.allJava
+    classifier = 'sources'
 }
 task javadocJar(type: Jar) {
+    from javadoc
     classifier = 'javadoc'
-    from javadoc.destinationDir
 }
-artifacts {
-    archives javadocJar, sourcesJar
-}
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            pom.project {
-                name 'BaseUtils'
-                packaging 'jar'
-                description 'A base utils'
-                url 'https://github.com/makai554892700/web-utils/tree/master/base-utils'
-                scm {
-                    connection 'scm:git@github.com:makai554892700/web-utils.git'
-                    developerConnection 'scm:git@github.com:makai554892700/web-utils.git'
-                    url 'https://github.com/makai554892700/web-utils.git'
-                }
-
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                name = 'BaseUtils'
+                packaging = 'jar'
+                description = 'A base utils'
+                url = 'https://github.com/makai554892700/web-utils/tree/master/base-utils'
                 licenses {
                     license {
-                        name 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
-
                 developers {
                     developer {
-                        id 'makai'
-                        name 'makai'
-                        email 'makai554892700@sina.com'
+                        id = 'makai'
+                        name = 'makai'
+                        email = 'makai554892700@sina.com'
                     }
                 }
+                scm {
+                    connection = 'scm:git@github.com:makai554892700/web-utils.git'
+                    developerConnection = 'scm:git@github.com:makai554892700/web-utils.git'
+                    url = 'https://github.com/makai554892700/web-utils.git'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
             }
         }
     }
 }
 signing {
-    sign configurations.archives
+    sign publishing.publications.mavenJava
 }
-// gradle base-utils:uploadArchives
+javadoc {
+    options.addStringOption("charset", "UTF-8")
+}
+// gradle base-utils:publish

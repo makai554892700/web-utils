@@ -21,7 +21,7 @@ public class HttpUtils {
     private static final String PUT = "PUT";
     private static final String POST = "POST";
 
-    public interface IWebCallback {
+    public static interface IWebCallback {
 
         void onCallback(int status, String message, Map<String, List<String>> heard, byte[] data);
 
