@@ -1,8 +1,8 @@
 package www.mys.com.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;

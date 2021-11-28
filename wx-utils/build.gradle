@@ -1,5 +1,5 @@
 group 'com.woaizhuangbi'
-version '0.0.2-RELEASE'
+version '0.0.3-RELEASE'
 archivesBaseName = 'wx-utils'
 jar.enabled = true
 bootJar.enabled = false
@@ -11,7 +11,7 @@ dependencies {
     compileOnly("org.bouncycastle:bcprov-jdk16:1.46")
     compileOnly("org.jdom:jdom2:2.0.6")
     api("com.woaizhuangbi:encrypt-utils:0.0.1-RELEASE")
-    api("com.woaizhuangbi:net-utils:0.0.1-RELEASE")
+    api("com.woaizhuangbi:net-utils:0.0.2-RELEASE")
 }
 task sourcesJar(type: Jar) {
     from sourceSets.main.allJava
