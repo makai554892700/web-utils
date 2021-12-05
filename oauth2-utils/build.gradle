@@ -63,4 +63,4 @@ signing {
 javadoc {
     options.addStringOption("charset", "UTF-8")
 }
-// gradle spring-utils:publish
+// gradle oauth2-utils:publish
