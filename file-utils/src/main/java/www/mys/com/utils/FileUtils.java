@@ -1,12 +1,119 @@
 package www.mys.com.utils;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FileUtils {
 
     private static final Logger log = Logger.getLogger(FileUtils.class.getName());
+
+    public static boolean transDEAppend(String realFilePath, String parentPath, String key, int minLen, int maxLen) {
+        if (key == null || key.length() != 256) {
+            return false;
+        }
+        final FileInputStream fileInputStream;
+        try {
+            fileInputStream = new FileInputStream(realFilePath);
+        } catch (Exception e) {
+            return false;
+        }
+        final StringBuilder error = new StringBuilder();
+        readByte(fileInputStream, new ByteBack() {
+            private int maxIndex = 0;
+            private FileOutputStream fileOutputStream;
+
+            @Override
+            public void onStart(String fileName) {
+            }
+
+            @Override
+            public void onByte(byte[] data, int len) {
+                if (maxIndex-- <= 0) {
+                    maxIndex = minLen + new Random().nextInt(maxLen - minLen);
+                    String currentFileName = parentPath + "/" + getRandomStr(16);
+                    System.out.println("currentFileName=" + currentFileName);
+                    sureFileIsNew(currentFileName);
+                    if (fileOutputStream != null) {
+                        CloseUtils.closeSilently(fileOutputStream);
+                    }
+                    try {
+                        fileOutputStream = new FileOutputStream(currentFileName, true);
+                    } catch (Exception e) {
+                    }
+                }
+                if (fileOutputStream == null) {
+                    error.append("-");
+                    return;
+                }
+                try {
+                    byte[] tempByte = deByte(data, len, key);
+                    fileOutputStream.write(tempByte, 0, len);
+                    fileOutputStream.flush();
+                } catch (Exception e) {
+                    error.append("-");
+                }
+            }
+
+            @Override
+            public void onEnd(String fileName) {
+                if (fileOutputStream != null) {
+                    CloseUtils.closeSilently(fileOutputStream);
+                }
+            }
+        }, true, 25600);
+        return error.length() == 0;
+    }
+
+    public static boolean transDEAppend(String resultFilePath, ArrayList<String> decodeFiles, String key) {
+        if (key == null || key.length() != 256) {
+            return false;
+        }
+        File resultFile = sureFileIsNew(resultFilePath);
+        if (resultFile == null) {
+            return false;
+        }
+        final FileOutputStream fileOutputStream;
+        try {
+            fileOutputStream = new FileOutputStream(resultFilePath, true);
+        } catch (Exception e) {
+            return false;
+        }
+        final StringBuilder error = new StringBuilder();
+        FileInputStream tempFileInputStream;
+        for (String decodeFile : decodeFiles) {
+            try {
+                tempFileInputStream = new FileInputStream(decodeFile);
+            } catch (Exception e) {
+                continue;
+            }
+            readByte(tempFileInputStream, new ByteBack() {
+
+                @Override
+                public void onStart(String fileName) {
+                }
+
+                @Override
+                public void onByte(byte[] data, int len) {
+                    try {
+                        byte[] tempByte = deByte(data, len, key);
+                        fileOutputStream.write(tempByte, 0, len);
+                        fileOutputStream.flush();
+                    } catch (Exception e) {
+                        error.append("-");
+                    }
+                }
+
+                @Override
+                public void onEnd(String fileName) {
+                }
+            }, true, 25600);
+        }
+        CloseUtils.closeSilently(fileOutputStream);
+        return error.length() == 0;
+    }
 
     public static boolean transDE(InputStream deFileStream, String resultFilePath, String key) {
         return transDE(deFileStream, resultFilePath, key, 2560);
@@ -298,6 +405,7 @@ public class FileUtils {
             }
             return false;
         }
+        byteBack.onStart(null);
         byte[] tempByte = new byte[len];
         int length;
         try {
@@ -311,6 +419,7 @@ public class FileUtils {
             if (close) {
                 CloseUtils.closeSilently(inputStream);
             }
+            byteBack.onEnd(null);
         }
         return true;
     }
@@ -427,4 +536,16 @@ public class FileUtils {
         public void onEnd(String fileName);
     }
 
+    private static final String[] HEX_STR = new String[]{"0", "1", "2"
+            , "3", "4", "5", "6", "7", "8", "9", "A", "B"
+            , "C", "D", "E", "F"};
+
+    public static String getRandomStr(int len) {
+        StringBuilder result = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < len; i++) {
+            result.append(HEX_STR[random.nextInt(HEX_STR.length)]);
+        }
+        return result.toString();
+    }
 }
