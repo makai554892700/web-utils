@@ -10,6 +10,10 @@ public class FileUtils {
 
     private static final Logger log = Logger.getLogger(FileUtils.class.getName());
 
+    public static boolean transDEAppend(String realFilePath, String parentPath, String key) {
+        return transDEAppend(realFilePath, parentPath, key, 100, 200);
+    }
+
     public static boolean transDEAppend(String realFilePath, String parentPath, String key, int minLen, int maxLen) {
         if (key == null || key.length() != 256) {
             return false;
@@ -68,6 +72,19 @@ public class FileUtils {
     }
 
     public static boolean transDEAppend(String resultFilePath, ArrayList<String> decodeFiles, String key) {
+        ArrayList<InputStream> decodeStreams = new ArrayList<>();
+        if (decodeFiles != null) {
+            for (String decodeFile : decodeFiles) {
+                try {
+                    decodeStreams.add(new FileInputStream(decodeFile));
+                } catch (Exception e) {
+                }
+            }
+        }
+        return transDEAppend(resultFilePath, decodeStreams, key, true);
+    }
+
+    public static boolean transDEAppend(String resultFilePath, ArrayList<InputStream> decodeStreams, String key, boolean close) {
         if (key == null || key.length() != 256) {
             return false;
         }
@@ -82,14 +99,8 @@ public class FileUtils {
             return false;
         }
         final StringBuilder error = new StringBuilder();
-        FileInputStream tempFileInputStream;
-        for (String decodeFile : decodeFiles) {
-            try {
-                tempFileInputStream = new FileInputStream(decodeFile);
-            } catch (Exception e) {
-                continue;
-            }
-            readByte(tempFileInputStream, new ByteBack() {
+        for (InputStream inputStream : decodeStreams) {
+            readByte(inputStream, new ByteBack() {
 
                 @Override
                 public void onStart(String fileName) {
@@ -109,7 +120,7 @@ public class FileUtils {
                 @Override
                 public void onEnd(String fileName) {
                 }
-            }, true, 25600);
+            }, close, 25600);
         }
         CloseUtils.closeSilently(fileOutputStream);
         return error.length() == 0;
