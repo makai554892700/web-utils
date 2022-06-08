@@ -76,10 +76,11 @@ public class ZipUtils {
         File rootFile = null;
         FileUtils.sureDir(rootPath);
         ZipFile zipFile = null;
-        String path;
+        String path, tempParent, tempPath;
         Enumeration enumeration;
         ZipEntry entry;
         InputStream inputStream;
+        int index;
         try {
             zipFile = new ZipFile(zip, charset);
             enumeration = zipFile.entries();
@@ -94,6 +95,15 @@ public class ZipUtils {
                 if (entry.isDirectory()) {
                     FileUtils.sureDir(path);
                 } else {
+                    tempParent = path.substring(0, path.lastIndexOf("/") + 1);
+                    tempPath = tempParent.replace(rootPath, "");
+                    index = 1;
+                    while (index > 0) {
+                        index = tempPath.indexOf("/", index + 1);
+                        if (index > 1) {
+                            FileUtils.sureDir(rootPath + tempPath.substring(0, index));
+                        }
+                    }
                     FileUtils.sureFileIsNew(path);
                     inputStream = zipFile.getInputStream(entry);
                     FileUtils.inputStream2File(inputStream, new File(path));

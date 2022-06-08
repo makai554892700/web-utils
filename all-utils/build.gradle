@@ -1,12 +1,12 @@
 group 'com.woaizhuangbi'
-version '1.0.1-RELEASE'
+version '1.0.2-RELEASE'
 archivesBaseName = 'all-utils'
 jar.enabled = true
 bootJar.enabled = false
 dependencies {
     api("com.woaizhuangbi:base-utils:0.0.1-RELEASE")
     api("com.woaizhuangbi:encrypt-utils:0.0.1-RELEASE")
-    api('com.woaizhuangbi:file-utils:0.0.7-RELEASE')
+    api('com.woaizhuangbi:file-utils:0.1.0-RELEASE')
     api("com.woaizhuangbi:net-utils:0.0.2-RELEASE")
     api('com.woaizhuangbi:spring-utils:1.0.2-RELEASE')
 }

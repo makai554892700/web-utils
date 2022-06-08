@@ -12,12 +12,13 @@ import www.mys.com.utils.DownloadUtils;
 import www.mys.com.utils.FileUtils;
 import www.mys.com.utils.MD5Utils;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -83,7 +84,7 @@ public class FileServiceImpl implements FileService {
         Name name = getNameById(fileId);
         if (name != null) {
             DownloadUtils.downloadFile(request, response, new FileInputStream(name.realPath), name.fileName
-                    , new File(name.realPath).length(), new MimetypesFileTypeMap().getContentType(name.fileName)
+                    , new File(name.realPath).length(), Files.probeContentType(Paths.get(name.fileName))
                     , true, maxAge);
         } else {
             throw new Exception("file not exist.");
@@ -173,7 +174,11 @@ public class FileServiceImpl implements FileService {
 
             @Override
             public String getContentType() {
-                return new MimetypesFileTypeMap().getContentType(name.fileName);
+                try {
+                    return Files.probeContentType(Paths.get(name.fileName));
+                } catch (Exception e) {
+                    return "text/plain";
+                }
             }
 
             @Override

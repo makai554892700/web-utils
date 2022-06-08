@@ -1,11 +1,11 @@
 group 'com.woaizhuangbi'
-version '1.0.5-RELEASE'
+version '1.0.6-RELEASE'
 archivesBaseName = 'file-local'
 jar.enabled = true
 bootJar.enabled = false
 dependencies {
     compileOnly("com.woaizhuangbi:spring-utils:1.0.2-RELEASE")
-    compileOnly("com.woaizhuangbi:file-utils:0.0.7-RELEASE")
+    compileOnly("com.woaizhuangbi:file-utils:0.1.0-RELEASE")
     compileOnly("com.woaizhuangbi:encrypt-utils:0.0.1-RELEASE")
     compileOnly("com.woaizhuangbi:file-interface:1.0.1-RELEASE")
     compileOnly("org.springframework.boot:spring-boot-starter-web")
